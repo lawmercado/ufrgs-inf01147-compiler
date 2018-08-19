@@ -2,6 +2,7 @@
 %{
 #include "tokens.h"
 #include "hash.h"
+#include <stdio.h>
 
 int st_isRunning = 1;
 
@@ -48,6 +49,8 @@ ML_COMMENT          "/*"([^*]|(\*+[^*/]))*"*/"
 int yywrap(void)
 {
     st_isRunning = 0;
+
+    printf("LINE COUNT %d\n", yylineno);
 
     return 1;
 }
