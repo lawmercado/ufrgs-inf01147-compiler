@@ -1,4 +1,5 @@
 if oi==ko then // oioiosd
+oi or kokonuts and potatoes
 0.9
 559
 11.89
@@ -13,4 +14,4 @@ _ow
 { }
 */*/
 , ; : d b q p { } + - * / < > = ! & $ #
-a = 1;
+char a = 1;
