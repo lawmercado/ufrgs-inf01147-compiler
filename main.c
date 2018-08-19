@@ -1,0 +1,95 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include "tokens.h"
+
+// Lex related definitions
+int yylex(void);
+int yywrap(void);
+extern char *yytext;
+extern FILE *yyin;
+extern int yylineno;
+
+// General state informations
+int st_numLine;
+int st_isRunning;
+
+int isRunning(void);
+int getLineNumber(void);
+void initMe(void);
+
+int main(int argc, char** argv)
+{
+    FILE *expectedOutput = 0;
+    int token = 0;
+    int answer = 0;
+    int nota = 0;
+    int i = 0;
+
+    if (argc < 3)
+    {
+        printf("call: %s input.txt output.txt \n", argv[0]);
+        exit(1);
+    }
+
+    if ((yyin = fopen(argv[1], "r")) == 0)
+    {
+        printf("error: Cannot open file %s... \n", argv[1]);
+        exit(1);
+    }
+
+    if ((expectedOutput = fopen(argv[2],"r")) == 0)
+    {
+        printf("error: Cannot open file %s... \n", argv[2]);
+        exit(1);
+    }
+
+    initMe();
+
+    while (isRunning())
+    {
+        token = yylex();
+
+        if (!isRunning())
+        {
+            break;
+        }
+
+        fscanf(expectedOutput,"%d",&answer);
+
+        if (token == answer)
+        {
+            fprintf(stderr, "%d = OK(%s) ", i, yytext);
+            ++nota;
+        }
+        else
+        {
+            fprintf(stderr, "\n%d = ERROR(%s, %d, %d) ", i, yytext, token, answer);
+        }
+
+        ++i;
+    }
+
+    fprintf(stderr, "\nGRADE %d, %.2f%% of right results\n", nota, ((float)nota/i) * 100);
+}
+
+int yywrap(void)
+{
+    st_isRunning = 0;
+
+    return 1;
+}
+
+void initMe(void)
+{
+    st_isRunning = 1;
+}
+
+int isRunning(void)
+{
+    return st_isRunning;
+}
+
+int getLineNumber(void)
+{
+    return yylineno;
+}
