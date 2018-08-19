@@ -41,7 +41,7 @@ ML_COMMENT          "/*"([^*]|(\*+[^*/]))*"*/"
 {SPECIAL_CH}        { return yytext[0]; }
 {SL_COMMENT}
 {ML_COMMENT}
-[ \t\n]
+[ \t\n]+
 .                   { return TOKEN_ERROR; }
 %%
 
