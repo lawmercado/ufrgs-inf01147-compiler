@@ -1,20 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "tokens.h"
 
 // Lex related definitions
 int yylex(void);
-int yywrap(void);
 extern char *yytext;
 extern FILE *yyin;
-extern int yylineno;
-
-// General state informations
-int st_numLine;
-int st_isRunning;
 
 int isRunning(void);
-int getLineNumber(void);
 void initMe(void);
 
 int main(int argc, char** argv)
@@ -70,26 +62,4 @@ int main(int argc, char** argv)
     }
 
     fprintf(stderr, "\nGRADE %d, %.2f%% of right results\n", nota, ((float)nota/i) * 100);
-}
-
-int yywrap(void)
-{
-    st_isRunning = 0;
-
-    return 1;
-}
-
-void initMe(void)
-{
-    st_isRunning = 1;
-}
-
-int isRunning(void)
-{
-    return st_isRunning;
-}
-
-int getLineNumber(void)
-{
-    return yylineno;
 }

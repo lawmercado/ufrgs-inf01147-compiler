@@ -1,6 +1,10 @@
 %option yylineno
 %{
 #include "tokens.h"
+#include "hash.h"
+
+int st_isRunning = 1;
+
 %}
 
 DIGIT               [0-9]
@@ -40,3 +44,20 @@ ML_COMMENT          "/*"([^*]|(\*+[^*/]))*"*/"
 [ \t\n]
 .                   { return TOKEN_ERROR; }
 %%
+
+int yywrap(void)
+{
+    st_isRunning = 0;
+
+    return 1;
+}
+
+int isRunning(void)
+{
+    return st_isRunning;
+}
+
+int getLineNumber(void)
+{
+    return yylineno;
+}
