@@ -17,38 +17,38 @@ int main(int argc, char** argv)
     int nota = 0;
     int i = 0;
 
-    if (argc < 3)
+    if(argc < 3)
     {
-        printf("call: %s input.txt output.txt \n", argv[0]);
+        printf("Call: %s input.txt output.txt \n", argv[0]);
         exit(1);
     }
 
-    if ((yyin = fopen(argv[1], "r")) == 0)
+    if((yyin = fopen(argv[1], "r")) == 0)
     {
-        printf("error: Cannot open file %s... \n", argv[1]);
-        exit(1);
+        printf("Error: Cannot open file %s... \n", argv[1]);
+        exit(2);
     }
 
-    if ((expectedOutput = fopen(argv[2],"r")) == 0)
+    if((expectedOutput = fopen(argv[2],"r")) == 0)
     {
-        printf("error: Cannot open file %s... \n", argv[2]);
-        exit(1);
+        printf("Error: Cannot open file %s... \n", argv[2]);
+        exit(2);
     }
 
     initMe();
 
-    while (isRunning())
+    while(isRunning())
     {
         token = yylex();
 
-        if (!isRunning())
+        if(!isRunning())
         {
             break;
         }
 
         fscanf(expectedOutput,"%d",&answer);
 
-        if (token == answer)
+        if(token == answer)
         {
             fprintf(stderr, "%d = OK(%s) ", i, yytext);
             ++nota;
@@ -62,4 +62,6 @@ int main(int argc, char** argv)
     }
 
     fprintf(stderr, "\nGRADE %d, %.2f%% of right results\n", nota, ((float)nota/i) * 100);
+
+    return 0;
 }
