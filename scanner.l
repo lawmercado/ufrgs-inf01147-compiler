@@ -1,10 +1,8 @@
 %option yylineno
 %{
+#include <stdio.h>
 #include "tokens.h"
 #include "hash.h"
-
-int isRunning(void);
-int getLineNumber(void);
 
 int st_isRunning = 1;
 %}
@@ -12,10 +10,11 @@ int st_isRunning = 1;
 DIGIT               [0-9]
 LIT_CH              ('([^'\\\n]|\\.)')|('')
 LIT_STR             \"(\\.|[^"\\])*\"
-ID                  [ace-or-zACE-OR-Z_0-9]
+ID                  ([ace-or-zACE-OR-Z_0-9]+)|(<[0-9]+>[ace-or-zACE-OR-Z_]]+)
 SPECIAL_CH          [,;:dbqp\{\}+\-*/<>\=!&\$#]
 SL_COMMENT          "//".*
 ML_COMMENT          "/*"([^*]|(\*+[^*/]))*"*/"
+
 
 %%
 
@@ -35,11 +34,11 @@ ML_COMMENT          "/*"([^*]|(\*+[^*/]))*"*/"
 "<="                { return OPERATOR_LE; }
 ">="                { return OPERATOR_GE; }
 "=="                { return OPERATOR_EQ; }
-{DIGIT}+            { return LIT_INTEGER; }
-{DIGIT}+"."{DIGIT}* { return LIT_FLOAT; }
-{LIT_CH}            { return LIT_CHAR; }
-{LIT_STR}           { return LIT_STRING; }
-{ID}+               { return TK_IDENTIFIER; }
+{DIGIT}+            { hashInsert(0, yytext); return LIT_INTEGER; }
+{DIGIT}+"."{DIGIT}* { hashInsert(1, yytext); return LIT_FLOAT; }
+{LIT_CH}            { hashInsert(2, yytext); return LIT_CHAR; }
+{LIT_STR}           { hashInsert(3, yytext); return LIT_STRING; }
+{ID}                { hashInsert(4, yytext); return TK_IDENTIFIER; }
 {SPECIAL_CH}        { return yytext[0]; }
 {SL_COMMENT}
 {ML_COMMENT}
@@ -48,19 +47,26 @@ ML_COMMENT          "/*"([^*]|(\*+[^*/]))*"*/"
 
 %%
 
+
+
 int yywrap(void)
 {
     st_isRunning = 0;
-
+    printf("Line count %d \n", yylineno);
     return 1;
 }
 
 int isRunning(void)
 {
-    return st_isRunning;
+  return st_isRunning;
 }
 
 int getLineNumber(void)
 {
-    return yylineno;
+  return yylineno;
+}
+
+void initMe()
+{
+  return hashInit();
 }
