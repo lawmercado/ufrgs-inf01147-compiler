@@ -3,9 +3,9 @@
 #include "tokens.h"
 #include "hash.h"
 
+void initMe(void);
 int isRunning(void);
 int getLineNumber(void);
-void initMe(void);
 
 int st_isRunning = 1;
 %}
