@@ -13,7 +13,9 @@ Where 'input.txt' contains the text to be evaluated and 'output.txt' contains th
 make clean
 ```
 
-## Status - according to the portuguese assignment definition
+## Status
+According to the portuguese assignment definition.
+
 ### Phase 1
 - [x] reconhecer as expressões regulares que descrevem cada tipo de lexema;
 - [x] classificar os lexemas reconhecidos em tokens retornando as constantes definidas no
