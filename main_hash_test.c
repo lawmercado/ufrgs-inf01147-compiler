@@ -1,3 +1,10 @@
+/**
+ * Main to check the tokens and the hash table in a friendly way
+ *
+ * @author Luís Augusto Weber Mercado [lawmercado@inf.ufrgs.br]
+ * @author Nicholas de Aquino Lau [nalau@inf.ufrgs.br]
+ */
+
 #include <stdlib.h>
 #include <stdio.h>
 #include "tokens.h"

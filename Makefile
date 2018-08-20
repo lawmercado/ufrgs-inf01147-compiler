@@ -1,3 +1,9 @@
+##
+# Makefile for the lexical analyser
+#
+# @author Luís Augusto Weber Mercado [lawmercado@inf.ufrgs.br]
+# @author Nicholas de Aquino Lau [nalau@inf.ufrgs.br]
+#
 
 default:
 	lex scanner.l

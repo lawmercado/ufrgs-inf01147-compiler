@@ -1,3 +1,10 @@
+/**
+ * Hash table definitions
+ *
+ * @author Luís Augusto Weber Mercado [lawmercado@inf.ufrgs.br]
+ * @author Nicholas de Aquino Lau [nalau@inf.ufrgs.br]
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

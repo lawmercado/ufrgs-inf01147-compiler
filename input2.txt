@@ -1,0 +1,28 @@
+char waw = 'c';
+int valor = 99;
+float xxxfloat = 10.32;
+
+/*UHULL
+
+
+oi*/
+
+if d waw == 2 b then { //oi
+	you = 9;
+}
+else {
+	you = 999;
+}
+
+while q valor == 99 p {
+	valor = valor - 10;
+}
+
+if q valor >= 0 or valor <= 10 p {
+	read "oi";
+	print "aaaa";
+	return 2;
+}
+
+333rr = "OIOIOI\"LALLALA" "oi";
+()

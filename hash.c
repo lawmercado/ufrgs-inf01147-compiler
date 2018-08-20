@@ -1,3 +1,10 @@
+/**
+ * Hash table implementation
+ *
+ * @author Luís Augusto Weber Mercado [lawmercado@inf.ufrgs.br]
+ * @author Nicholas de Aquino Lau [nalau@inf.ufrgs.br]
+ */
+
 #include "hash.h"
 
 HASH_NODE* Table[HASH_SIZE];

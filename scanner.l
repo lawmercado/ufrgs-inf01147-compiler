@@ -1,5 +1,12 @@
 %option yylineno
 %{
+/**
+ * Lexical analyser for using with flex
+ *
+ * @author Luís Augusto Weber Mercado [lawmercado@inf.ufrgs.br]
+ * @author Nicholas de Aquino Lau [nalau@inf.ufrgs.br]
+ */
+
 #include "tokens.h"
 #include "hash.h"
 

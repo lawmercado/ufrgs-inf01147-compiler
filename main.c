@@ -1,3 +1,10 @@
+/**
+ * Main provided by the Teacher. Adapted, but maintaining compatibility
+ *
+ * @author Luís Augusto Weber Mercado [lawmercado@inf.ufrgs.br]
+ * @author Nicholas de Aquino Lau [nalau@inf.ufrgs.br]
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 
