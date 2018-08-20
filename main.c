@@ -14,7 +14,7 @@ int main(int argc, char** argv)
     FILE *expectedOutput = 0;
     int token = 0;
     int answer = 0;
-    int nota = 0;
+    int grade = 0;
     int i = 0;
 
     if(argc < 3)
@@ -46,12 +46,12 @@ int main(int argc, char** argv)
             break;
         }
 
-        fscanf(expectedOutput,"%d",&answer);
+        fscanf(expectedOutput, "%d", &answer);
 
         if(token == answer)
         {
             fprintf(stderr, "%d = OK(%s) ", i, yytext);
-            ++nota;
+            ++grade;
         }
         else
         {
@@ -61,7 +61,7 @@ int main(int argc, char** argv)
         ++i;
     }
 
-    fprintf(stderr, "\nGRADE %d, %.2f%% of right results\n", nota, ((float)nota/i) * 100);
+    fprintf(stderr, "\nGRADE %d, %.2f%% of right results\n", grade, ((float)grade/i) * 100);
 
     return 0;
 }

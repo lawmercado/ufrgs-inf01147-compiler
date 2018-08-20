@@ -29,6 +29,8 @@ int main (int argc, char **argv)
 
     initMe();
 
+    fprintf(stderr, "\nTokens: \n");
+
     while(isRunning())
     {
         token = yylex();
@@ -73,6 +75,7 @@ int main (int argc, char **argv)
         }
     }
 
+    fprintf(stderr, "\n\nHash table data: \n");
     hashPrint();
 
     return 0;

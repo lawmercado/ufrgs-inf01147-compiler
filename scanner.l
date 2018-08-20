@@ -7,7 +7,7 @@ void initMe(void);
 int isRunning(void);
 int getLineNumber(void);
 
-int st_isRunning = 1;
+int st_isRunning = 0;
 %}
 
 DIGIT               [0-9]
@@ -58,6 +58,7 @@ int yywrap(void)
 
 void initMe(void)
 {
+    st_isRunning = 1;
     hashInit();
 }
 
