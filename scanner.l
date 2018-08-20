@@ -1,8 +1,11 @@
 %option yylineno
 %{
-#include <stdio.h>
 #include "tokens.h"
 #include "hash.h"
+
+int isRunning(void);
+int getLineNumber(void);
+void initMe(void);
 
 int st_isRunning = 1;
 %}
@@ -14,7 +17,6 @@ ID                  ([ace-or-zACE-OR-Z_0-9]+)|(<[0-9]+>[ace-or-zACE-OR-Z_]]+)
 SPECIAL_CH          [,;:dbqp\{\}+\-*/<>\=!&\$#]
 SL_COMMENT          "//".*
 ML_COMMENT          "/*"([^*]|(\*+[^*/]))*"*/"
-
 
 %%
 
@@ -47,26 +49,24 @@ ML_COMMENT          "/*"([^*]|(\*+[^*/]))*"*/"
 
 %%
 
-
-
 int yywrap(void)
 {
     st_isRunning = 0;
-    printf("Line count %d \n", yylineno);
+
     return 1;
+}
+
+void initMe(void)
+{
+    hashInit();
 }
 
 int isRunning(void)
 {
-  return st_isRunning;
+    return st_isRunning;
 }
 
 int getLineNumber(void)
 {
-  return yylineno;
-}
-
-void initMe()
-{
-  return hashInit();
+    return yylineno;
 }
