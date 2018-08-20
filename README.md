@@ -20,7 +20,7 @@ According to the portuguese assignment definition.
 - [x] reconhecer as expressões regulares que descrevem cada tipo de lexema;
 - [x] classificar os lexemas reconhecidos em tokens retornando as constantes definidas no
 arquivo tokens.h fornecido ou codigos ascii para caracteres simples;
-- [ ] incluir os identificadores e os literais (inteiros, caracteres e strings) em uma tabela de
+- [x] incluir os identificadores e os literais (inteiros, caracteres e strings) em uma tabela de
 símbolos implementada com estrutura hash;
 - [x] controlar o número de linha do arquivo fonte, e fornecer uma função declarada como
 int getLineNumber(void) a ser usada nos testes e pela futura análise sintática;
