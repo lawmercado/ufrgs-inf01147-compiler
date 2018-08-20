@@ -11,7 +11,7 @@ int st_isRunning = 1;
 DIGIT               [0-9]
 LIT_CH              ('([^'\\\n]|\\.)')|('')
 LIT_STR             \"(\\.|[^"\\])*\"
-ID                  ([ace-or-zACE-OR-Z_0-9]+)|(<[0-9]+>[ace-or-zACE-OR-Z_]]+)
+ID                  [ace-or-zACE-OR-Z_0-9]
 SPECIAL_CH          [,;:dbqp\{\}+\-*/<>\=!&\$#]
 SL_COMMENT          "//".*
 ML_COMMENT          "/*"([^*]|(\*+[^*/]))*"*/"
@@ -38,7 +38,7 @@ ML_COMMENT          "/*"([^*]|(\*+[^*/]))*"*/"
 {DIGIT}+"."{DIGIT}* { return LIT_FLOAT; }
 {LIT_CH}            { return LIT_CHAR; }
 {LIT_STR}           { return LIT_STRING; }
-{ID}                { return TK_IDENTIFIER; }
+{ID}+               { return TK_IDENTIFIER; }
 {SPECIAL_CH}        { return yytext[0]; }
 {SL_COMMENT}
 {ML_COMMENT}
