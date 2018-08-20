@@ -2,10 +2,11 @@
 %{
 #include "tokens.h"
 #include "hash.h"
-#include <stdio.h>
+
+int isRunning(void);
+int getLineNumber(void);
 
 int st_isRunning = 1;
-
 %}
 
 DIGIT               [0-9]
@@ -44,13 +45,12 @@ ML_COMMENT          "/*"([^*]|(\*+[^*/]))*"*/"
 {ML_COMMENT}
 [ \t\n]+
 .                   { return TOKEN_ERROR; }
+
 %%
 
 int yywrap(void)
 {
     st_isRunning = 0;
-
-    printf("LINE COUNT %d\n", yylineno);
 
     return 1;
 }
