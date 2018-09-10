@@ -75,10 +75,10 @@ command
     | KW_PRINT parameter_list ';'
     | KW_RETURN expression ';'
     | KW_READ TK_IDENTIFIER ';'
-    | type_definition 'd' parameter_definition 'b' block
+    | function_definition
+    | attribuition
     | type_definition ';'
     | array_definition ';'
-    | attribuition
     | block ';'
     | ';'
     |
@@ -88,6 +88,10 @@ block
     : '{' command_list '}'
 	;
 
+function_definition
+    : type_definition 'd' parameter_definition 'b' block
+    ;
+
 attribuition
     : type_definition '=' expression ';'
 	| TK_IDENTIFIER 'q' expression 'p' '=' expression ';'
@@ -95,8 +99,7 @@ attribuition
 	;
 
 array_definition
-    :
-    type_definition 'q' LIT_INTEGER 'p' array_initialization
+    : type_definition 'q' LIT_INTEGER 'p' array_initialization
     ;
 
 array_initialization
