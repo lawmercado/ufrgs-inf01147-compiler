@@ -16,7 +16,7 @@ int getLineNumber(void);
 %}
 
 %union {
-	int intValue;
+    int intValue;
     float floatValue;
     char* stringValue;
     char charValue;
@@ -58,12 +58,12 @@ int getLineNumber(void);
 
 program
     : command_list
-	;
+    ;
 
 command_list
     : command command_list
-	|
-	;
+    |
+    ;
 
 command
     : KW_IF expression KW_THEN command
@@ -87,7 +87,7 @@ command
     | type_definition 'd' parameter_definition 'b' block
 
     | type_definition '=' expression ';'
-	| TK_IDENTIFIER 'q' expression 'p' '=' expression ';'
+    | TK_IDENTIFIER 'q' expression 'p' '=' expression ';'
     | TK_IDENTIFIER '=' expression ';'
 
     | type_definition 'q' LIT_INTEGER 'p' array_initialization ';'
@@ -102,13 +102,13 @@ command
 
 block
     : '{' command_list '}'
-	;
+    ;
 
 array_initialization
     : ':' array_initialization
-	| expression array_initialization
-	|
-	;
+    | expression array_initialization
+    |
+    ;
 
 parameter_list
     : expression parameter_list
@@ -124,35 +124,35 @@ parameter_definition
 
 type_definition
     : KW_INT TK_IDENTIFIER
-	| KW_FLOAT TK_IDENTIFIER
-	| KW_CHAR TK_IDENTIFIER
-	;
+    | KW_FLOAT TK_IDENTIFIER
+    | KW_CHAR TK_IDENTIFIER
+    ;
 
 expression
     : LIT_INTEGER
-	| LIT_FLOAT
+    | LIT_FLOAT
     | LIT_CHAR
-	| LIT_STRING
-	| TK_IDENTIFIER
-	| expression '+' expression
-	| expression '-' expression
-	| expression '*' expression
-	| expression '<' expression
-	| expression '>' expression
-	| expression OPERATOR_GE expression
-	| expression OPERATOR_LE expression
-	| expression OPERATOR_EQ expression
+    | LIT_STRING
+    | TK_IDENTIFIER
+    | expression '+' expression
+    | expression '-' expression
+    | expression '*' expression
+    | expression '<' expression
+    | expression '>' expression
+    | expression OPERATOR_GE expression
+    | expression OPERATOR_LE expression
+    | expression OPERATOR_EQ expression
     | expression OPERATOR_AND expression
     | expression OPERATOR_OR expression
-	| OPERATOR_NOT expression
-	| 'q' expression 'p'
+    | OPERATOR_NOT expression
+    | 'q' expression 'p'
     | 'd' expression 'b'
-	| TK_IDENTIFIER 'd' parameter_list 'b'
-	;
+    | TK_IDENTIFIER 'd' parameter_list 'b'
+    ;
 %%
 
 int yyerror(char *s)
 {
-	fprintf(stderr, "ERROR parsing the source code at line %d: %s\n", getLineNumber(), s);
-	exit(3);
+    fprintf(stderr, "ERROR parsing the source code at line %d: %s\n", getLineNumber(), s);
+    exit(3);
 }

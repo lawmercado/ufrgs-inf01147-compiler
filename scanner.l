@@ -43,21 +43,31 @@ ML_COMMENT          "/*"([^*]|(\*+[^*/]))*"*/"
 "<="                { return OPERATOR_LE; }
 ">="                { return OPERATOR_GE; }
 "=="                { return OPERATOR_EQ; }
-{DIGIT}+            { yylval.symbol = hashInsert(SYMBOL_LIT_INTEGER, yytext);
-		      yylval.intValue = atoi(yytext);		    
-                      return LIT_INTEGER; }
-{DIGIT}+"."{DIGIT}* { yylval.symbol = hashInsert(SYMBOL_LIT_FLOAT, yytext);
-		      yylval.floatValue = atof(yytext);		    
-                      return LIT_FLOAT; }
-{LIT_CH}            { yylval.symbol = hashInsert(SYMBOL_LIT_CHAR, yytext);
-		      yylval.charValue = yytext[0];		    
-                      return LIT_CHAR; }
-{LIT_STR}           { yylval.symbol = hashInsert(SYMBOL_LIT_STRING, yytext);
-		      yylval.stringValue = yytext;		    
-                      return LIT_STRING; }
-{ID}                { yylval.symbol = hashInsert(SYMBOL_TK_IDENTIFIER, yytext);
-		      yylval.stringValue = yytext;		    
-                      return TK_IDENTIFIER; }
+{DIGIT}+            {
+                        yylval.symbol = hashInsert(SYMBOL_LIT_INTEGER, yytext);
+                        yylval.intValue = atoi(yytext);
+                        return LIT_INTEGER;
+                    }
+{DIGIT}+"."{DIGIT}* {
+                        yylval.symbol = hashInsert(SYMBOL_LIT_FLOAT, yytext);
+                        yylval.floatValue = atof(yytext);
+                        return LIT_FLOAT;
+                    }
+{LIT_CH}            {
+                        yylval.symbol = hashInsert(SYMBOL_LIT_CHAR, yytext);
+                        yylval.charValue = yytext[0];
+                        return LIT_CHAR;
+                    }
+{LIT_STR}           {
+                        yylval.symbol = hashInsert(SYMBOL_LIT_STRING, yytext);
+                        yylval.stringValue = yytext;
+                        return LIT_STRING;
+                    }
+{ID}                {
+                        yylval.symbol = hashInsert(SYMBOL_TK_IDENTIFIER, yytext);
+                        yylval.stringValue = yytext;
+                        return TK_IDENTIFIER;
+                    }
 {SPECIAL_CH}        { return yytext[0]; }
 {SL_COMMENT}
 {ML_COMMENT}

@@ -26,20 +26,20 @@ int main(int argc, char** argv)
         exit(1);
     }
 
-	if ((yyin = fopen(argv[1], "r")) == 0)
-	{
-		fprintf(stderr, "Cannot open file %s\n", argv[1]);
-		exit(2);
-	}
+    if ((yyin = fopen(argv[1], "r")) == 0)
+    {
+        fprintf(stderr, "Cannot open file %s\n", argv[1]);
+        exit(2);
+    }
 
-	initMe();
+    initMe();
 
-	result = yyparse();
+    result = yyparse();
 
     if( result == 0 )
     {
         fprintf(stderr, "Accepted source code!\n");
-	hashPrint();
+        hashPrint();
         exit(0);
     }
     else
