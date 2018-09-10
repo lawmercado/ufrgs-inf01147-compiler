@@ -47,6 +47,20 @@ int main db
     print "LALAL";
   };
 
+  if d a==11 or a== 17 b then
+  {
+    if a==11 then {
+      print "oi";
+      print "oi";
+      print "oi";
+    };
+  }
+  else
+  {
+    print "LLALALAL";
+    print "LALAL";
+  };
+
   if da==10b then else
     ;
   ;;;

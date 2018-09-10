@@ -46,7 +46,12 @@ int getLineNumber(void);
 %token TOKEN_UNKNOWN
 
 %start program
-
+%right '='
+%left OPERATOR_NOT OPERATOR_AND OPERATOR_OR
+%left OPERATOR_EQ OPERATOR_GE OPERATOR_LE '>' '<'
+%left '+' '-'
+%left '*' '/'
+%right KW_IF KW_THEN KW_ELSE
 %%
 
 program
@@ -83,12 +88,6 @@ block
     : '{' command_list '}'
 	;
 
-type_definition
-    : KW_INT TK_IDENTIFIER
-	| KW_FLOAT TK_IDENTIFIER
-	| KW_CHAR TK_IDENTIFIER
-	;
-
 attribuition
     : type_definition '=' expression ';'
 	| TK_IDENTIFIER 'q' expression 'p' '=' expression ';'
@@ -116,6 +115,12 @@ parameter_definition
     : type_definition parameter_definition
 	| ',' parameter_definition
     |
+	;
+
+type_definition
+    : KW_INT TK_IDENTIFIER
+	| KW_FLOAT TK_IDENTIFIER
+	| KW_CHAR TK_IDENTIFIER
 	;
 
 expression
