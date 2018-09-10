@@ -1,12 +1,12 @@
 # ufrgs-inf01147-tp
-Compilers module final assignment. Currently in the first phase.
+Compilers module final assignment. Currently in the second phase.
 
 ## Running
 ```
 make
-./etapa1 input.txt output.txt
+./etapa2 inputfile
 ```
-Where 'input.txt' contains the text to be evaluated and 'output.txt' contains the expected output.
+Where 'inputfile' contains the text to be evaluated by the parser.
 
 ## Cleaning
 ```
@@ -15,6 +15,17 @@ make clean
 
 ## Status
 According to the portuguese assignment definition.
+
+### Phase 2
+- [x] o programa principal deve chamar uma única vez a rotina yyparse para reconhecer
+programas que fazem parte da linguagem, e se concluída com sucesso, a análise deve
+retornar o valor 0 com exit(0);
+- [x] imprimir uma mensagem de erro sintático para os programas não reconhecidos,
+informando a linha onde o erro ocorreu, e retornar o valor 3 como código genérico de
+erro sintático, chamando exit(3);
+- [ ] os nodos armazenados na tabela hash devem distinguir entre os tipos de símbolos
+armazenados, e o nodo deve ser associado ao token retornado através da atribuição
+para yylval.symbol;
 
 ### Phase 1
 - [x] reconhecer as expressões regulares que descrevem cada tipo de lexema;
