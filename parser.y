@@ -118,6 +118,7 @@ parameter_list
 
 parameter_definition
     : type_definition parameter_definition
+    | type_definition 'q' LIT_INTEGER 'p' parameter_definition
     | ',' parameter_definition
     |
     ;
@@ -129,7 +130,8 @@ type_definition
     ;
 
 expression
-    : LIT_INTEGER
+    : 'd' expression 'b'
+    | LIT_INTEGER
     | LIT_FLOAT
     | LIT_CHAR
     | LIT_STRING
@@ -137,6 +139,7 @@ expression
     | expression '+' expression
     | expression '-' expression
     | expression '*' expression
+    | expression '/' expression
     | expression '<' expression
     | expression '>' expression
     | expression OPERATOR_GE expression
@@ -145,9 +148,8 @@ expression
     | expression OPERATOR_AND expression
     | expression OPERATOR_OR expression
     | OPERATOR_NOT expression
-    | 'q' expression 'p'
-    | 'd' expression 'b'
     | TK_IDENTIFIER 'd' parameter_list 'b'
+    | TK_IDENTIFIER 'q' expression 'p'
     ;
 %%
 

@@ -39,6 +39,7 @@ int main(int argc, char** argv)
     if( result == 0 )
     {
         fprintf(stderr, "Accepted source code!\n");
+        fprintf(stderr, "The hash table for the symbols of the input file is: \n");
         hashPrint();
         exit(0);
     }
