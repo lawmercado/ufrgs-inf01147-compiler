@@ -19,6 +19,8 @@ int getLineNumber(void);
 	int intValue;
     float floatValue;
     char* stringValue;
+    char charValue;
+    struct hash_node* symbol;
 }
 
 %token KW_CHAR
@@ -37,10 +39,10 @@ int getLineNumber(void);
 %token OPERATOR_OR
 %token OPERATOR_AND
 %token OPERATOR_NOT
-%token TK_IDENTIFIER
+%token<stringValue> TK_IDENTIFIER
 %token<intValue> LIT_INTEGER
 %token<floatValue> LIT_FLOAT
-%token<intValue> LIT_CHAR
+%token<charValue> LIT_CHAR
 %token<stringValue> LIT_STRING
 %token TOKEN_ERROR
 %token TOKEN_UNKNOWN
@@ -70,37 +72,37 @@ command
     | KW_IF expression KW_THEN block KW_ELSE command
     | KW_IF expression KW_THEN command KW_ELSE block ';'
     | KW_IF expression KW_THEN block KW_ELSE block ';'
+    | KW_IF expression KW_THEN KW_ELSE command
+    | KW_IF expression KW_THEN KW_ELSE block
+
     | KW_WHILE expression command
     | KW_WHILE expression block ';'
+
     | KW_PRINT parameter_list ';'
+
     | KW_RETURN expression ';'
+
     | KW_READ TK_IDENTIFIER ';'
-    | function_definition
-    | attribuition
+
+    | type_definition 'd' parameter_definition 'b' block
+
+    | type_definition '=' expression ';'
+	| TK_IDENTIFIER 'q' expression 'p' '=' expression ';'
+    | TK_IDENTIFIER '=' expression ';'
+
+    | type_definition 'q' LIT_INTEGER 'p' array_initialization ';'
+
     | type_definition ';'
-    | array_definition ';'
+
     | block ';'
+
     | ';'
-    |
+
     ;
 
 block
     : '{' command_list '}'
 	;
-
-function_definition
-    : type_definition 'd' parameter_definition 'b' block
-    ;
-
-attribuition
-    : type_definition '=' expression ';'
-	| TK_IDENTIFIER 'q' expression 'p' '=' expression ';'
-    | TK_IDENTIFIER '=' expression ';'
-	;
-
-array_definition
-    : type_definition 'q' LIT_INTEGER 'p' array_initialization
-    ;
 
 array_initialization
     : ':' array_initialization
@@ -110,15 +112,15 @@ array_initialization
 
 parameter_list
     : expression parameter_list
-	| ',' parameter_list
+    | ',' parameter_list
     |
     ;
 
 parameter_definition
     : type_definition parameter_definition
-	| ',' parameter_definition
+    | ',' parameter_definition
     |
-	;
+    ;
 
 type_definition
     : KW_INT TK_IDENTIFIER
@@ -137,12 +139,12 @@ expression
 	| expression '*' expression
 	| expression '<' expression
 	| expression '>' expression
-	| expression OPERATOR_AND expression
 	| expression OPERATOR_GE expression
 	| expression OPERATOR_LE expression
 	| expression OPERATOR_EQ expression
-	| expression OPERATOR_NOT expression
-	| expression OPERATOR_OR expression
+    | expression OPERATOR_AND expression
+    | expression OPERATOR_OR expression
+	| OPERATOR_NOT expression
 	| 'q' expression 'p'
     | 'd' expression 'b'
 	| TK_IDENTIFIER 'd' parameter_list 'b'
