@@ -7,7 +7,7 @@
  * @author Nicholas de Aquino Lau [nalau@inf.ufrgs.br]
  */
 
-#include "y.tab.h"
+#include "tokens.h"
 #include "hash.h"
 
 void initMe(void);

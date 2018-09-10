@@ -8,67 +8,41 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-// Lex related definitions
-int yylex(void);
-extern char *yytext;
 extern FILE *yyin;
 
-int isRunning(void);
+int yyparse(void);
 void initMe(void);
+int yylex(void);
+int getLineNumber(void);
 
 int main(int argc, char** argv)
 {
-    FILE *expectedOutput = 0;
-    int token = 0;
-    int answer = 0;
-    int grade = 0;
-    int i = 0;
+    int result;
 
-    if(argc < 3)
+    if(argc < 2)
     {
-        printf("Call: %s input.txt output.txt \n", argv[0]);
+        printf("Call: %s input \n", argv[0]);
         exit(1);
     }
 
-    if((yyin = fopen(argv[1], "r")) == 0)
+	if ((yyin = fopen(argv[1], "r")) == 0)
+	{
+		fprintf(stderr, "Cannot open file %s\n", argv[1]);
+		exit(2);
+	}
+
+	initMe();
+
+	result = yyparse();
+
+    if( result == 0 )
     {
-        printf("Error: Cannot open file %s... \n", argv[1]);
-        exit(2);
+        fprintf(stderr, "Accepted source code!\n");
+        exit(0);
     }
-
-    if((expectedOutput = fopen(argv[2],"r")) == 0)
+    else
     {
-        printf("Error: Cannot open file %s... \n", argv[2]);
-        exit(2);
+        fprintf(stderr, "sERROR parsing the source code at line %d\n", getLineNumber());
+        exit(3);
     }
-
-    initMe();
-
-    while(isRunning())
-    {
-        token = yylex();
-
-        if(!isRunning())
-        {
-            break;
-        }
-
-        fscanf(expectedOutput, "%d", &answer);
-
-        if(token == answer)
-        {
-            fprintf(stderr, "%d = OK(%s) ", i, yytext);
-            ++grade;
-        }
-        else
-        {
-            fprintf(stderr, "\n%d = ERROR(%s, %d, %d) ", i, yytext, token, answer);
-        }
-
-        ++i;
-    }
-
-    fprintf(stderr, "\nGRADE %d, %.2f%% of right results\n", grade, ((float)grade/i) * 100);
-
-    return 0;
 }
