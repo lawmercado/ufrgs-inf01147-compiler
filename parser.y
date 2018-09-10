@@ -59,15 +59,15 @@ command_list
 	;
 
 command
-    : KW_IF expression KW_THEN command {fprintf(stderr, "IF THEN %d - \n", getLineNumber());}
-    | KW_IF expression KW_THEN block ';' {fprintf(stderr, "IF THEN blk %d - \n", getLineNumber());}
-    | KW_IF expression KW_THEN command KW_ELSE command {fprintf(stderr, "IF THEN cmd ELSE cmd%d - \n", getLineNumber());}
-    | KW_IF expression KW_THEN block KW_ELSE command {fprintf(stderr, "IF THEN blk ELSE cmd %d - \n", getLineNumber());}
-    | KW_IF expression KW_THEN command KW_ELSE block ';' {fprintf(stderr, "IF THEN cmd ELSE blk %d - \n", getLineNumber());}
-    | KW_IF expression KW_THEN block KW_ELSE block ';' {fprintf(stderr, "IF THEN blk ELSE blk %d - \n", getLineNumber());}
-    | KW_WHILE expression command {fprintf(stderr, "WHILE cmd %d - \n", getLineNumber());}
-    | KW_WHILE expression block ';' {fprintf(stderr, "WHILE blk %d - \n", getLineNumber());}
-    | KW_PRINT parameter_list ';' {fprintf(stderr, "PRINT %d - \n", getLineNumber());}
+    : KW_IF expression KW_THEN command
+    | KW_IF expression KW_THEN block ';'
+    | KW_IF expression KW_THEN command KW_ELSE command
+    | KW_IF expression KW_THEN block KW_ELSE command
+    | KW_IF expression KW_THEN command KW_ELSE block ';'
+    | KW_IF expression KW_THEN block KW_ELSE block ';'
+    | KW_WHILE expression command
+    | KW_WHILE expression block ';'
+    | KW_PRINT parameter_list ';'
     | KW_RETURN expression ';'
     | KW_READ TK_IDENTIFIER ';'
     | type_definition 'd' parameter_definition 'b' block
@@ -75,12 +75,12 @@ command
     | array_definition ';'
     | attribuition
     | block ';'
-    | ';' {fprintf(stderr, "PTV %d - ", getLineNumber());}
+    | ';'
     |
     ;
 
 block
-    : '{' command_list '}' {fprintf(stderr, "BLK %d - ", getLineNumber());}
+    : '{' command_list '}'
 	;
 
 type_definition
@@ -132,7 +132,7 @@ expression
 	| expression OPERATOR_AND expression
 	| expression OPERATOR_GE expression
 	| expression OPERATOR_LE expression
-	| expression OPERATOR_EQ expression {fprintf(stderr, "EQ %d - ", getLineNumber());}
+	| expression OPERATOR_EQ expression
 	| expression OPERATOR_NOT expression
 	| expression OPERATOR_OR expression
 	| 'q' expression 'p'
