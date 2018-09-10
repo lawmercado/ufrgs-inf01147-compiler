@@ -19,6 +19,8 @@ int getLineNumber(void);
 	int intValue;
     float floatValue;
     char* stringValue;
+    char charValue;
+    struct hash_node* symbol;
 }
 
 %token KW_CHAR
@@ -37,10 +39,10 @@ int getLineNumber(void);
 %token OPERATOR_OR
 %token OPERATOR_AND
 %token OPERATOR_NOT
-%token TK_IDENTIFIER
+%token<stringValue> TK_IDENTIFIER
 %token<intValue> LIT_INTEGER
 %token<floatValue> LIT_FLOAT
-%token<intValue> LIT_CHAR
+%token<charValue> LIT_CHAR
 %token<stringValue> LIT_STRING
 %token TOKEN_ERROR
 %token TOKEN_UNKNOWN

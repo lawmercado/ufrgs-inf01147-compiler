@@ -14,6 +14,7 @@ int yyparse(void);
 void initMe(void);
 int yylex(void);
 int getLineNumber(void);
+void hashPrint(void);
 
 int main(int argc, char** argv)
 {
@@ -38,6 +39,7 @@ int main(int argc, char** argv)
     if( result == 0 )
     {
         fprintf(stderr, "Accepted source code!\n");
+	hashPrint();
         exit(0);
     }
     else
