@@ -92,8 +92,6 @@ command
 
     | type_definition 'q' LIT_INTEGER 'p' array_initialization ';'
 
-    | type_definition ';'
-
     | block ';'
 
     | ';'
