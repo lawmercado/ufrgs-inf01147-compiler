@@ -67,13 +67,14 @@ command_list
 
 command
     : KW_IF expression KW_THEN command
-    | KW_IF expression KW_THEN block ';'
+    | KW_IF expression KW_THEN block
     | KW_IF expression KW_THEN command KW_ELSE command
     | KW_IF expression KW_THEN block KW_ELSE command
-    | KW_IF expression KW_THEN command KW_ELSE block ';'
-    | KW_IF expression KW_THEN block KW_ELSE block ';'
+    | KW_IF expression KW_THEN command KW_ELSE block
+    | KW_IF expression KW_THEN block KW_ELSE block
     | KW_IF expression KW_THEN KW_ELSE command
     | KW_IF expression KW_THEN KW_ELSE block
+    | KW_IF expression KW_THEN KW_ELSE
 
     | KW_WHILE expression command
     | KW_WHILE expression block ';'
