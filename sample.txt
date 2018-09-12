@@ -1,13 +1,12 @@
-int a = 0;
+/*int a = 0;
 int i = 0;
 int v q10p: 0 0 0 0 0 0 0 0 0 0;
 int mat q10p;
 float f = 10.55;
 char c = 'x';
-char x = 65;
+char x = 65;*/
 
-int main db
-  {
+int main db {
   a = 7;
   v qap = 90;
   print vqap;
@@ -40,7 +39,7 @@ int main db
   };
 
   if d a==11 or a== 17 b then
-    print "Var a ficou 11 ou 17\n";
+    print "Var a ficou 11 ou 17\n"
   else
   {
     print "LLALALAL";
@@ -70,8 +69,7 @@ int main db
     };
   };
 
-  if da==10b then else
-    ;
+  if da==10b then else ;
   ;;;
   {;};
   {};

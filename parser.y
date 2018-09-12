@@ -48,59 +48,30 @@ int getLineNumber(void);
 %token TOKEN_UNKNOWN
 
 %start program
+
 %right '='
 %left OPERATOR_NOT OPERATOR_AND OPERATOR_OR
 %left OPERATOR_EQ OPERATOR_GE OPERATOR_LE '>' '<'
 %left '+' '-'
 %left '*' '/'
 %right KW_IF KW_THEN KW_ELSE
+%right 'd' TK_IDENTIFIER
+
 %%
 
 program
-    : command_list
+    : declaration
+    | program declaration
     ;
 
-command_list
-    : command command_list
-    |
+declaration
+    : varibales_definition ';'
+    | functions_definition
     ;
 
-command
-    : KW_IF expression KW_THEN command
-    | KW_IF expression KW_THEN block
-    | KW_IF expression KW_THEN command KW_ELSE command
-    | KW_IF expression KW_THEN block KW_ELSE command
-    | KW_IF expression KW_THEN command KW_ELSE block
-    | KW_IF expression KW_THEN block KW_ELSE block
-    | KW_IF expression KW_THEN KW_ELSE command
-    | KW_IF expression KW_THEN KW_ELSE block
-    | KW_IF expression KW_THEN KW_ELSE
-
-    | KW_WHILE expression command
-    | KW_WHILE expression block ';'
-
-    | KW_PRINT parameter_list ';'
-
-    | KW_RETURN expression ';'
-
-    | KW_READ TK_IDENTIFIER ';'
-
-    | type_definition 'd' parameter_definition 'b' block
-
-    | type_definition '=' expression ';'
-    | TK_IDENTIFIER 'q' expression 'p' '=' expression ';'
-    | TK_IDENTIFIER '=' expression ';'
-
-    | type_definition 'q' LIT_INTEGER 'p' array_initialization ';'
-
-    | block ';'
-
-    | ';'
-
-    ;
-
-block
-    : '{' command_list '}'
+varibales_definition
+    : type_definition '=' expression
+    | type_definition 'q' LIT_INTEGER 'p' array_initialization
     ;
 
 array_initialization
@@ -109,16 +80,46 @@ array_initialization
     |
     ;
 
-parameter_list
-    : expression parameter_list
-    | ',' parameter_list
+functions_definition
+    : type_definition 'd' parameter_definition 'b' '{' command_list '}'
+    ;
+
+command_list
+    : command ';' command_list
     |
+    ;
+
+command
+    : KW_IF expression KW_THEN command
+    | KW_IF expression KW_THEN command KW_ELSE command
+
+    | KW_WHILE expression command
+
+    | KW_PRINT parameter_list
+
+    | KW_RETURN expression
+
+    | KW_READ TK_IDENTIFIER
+
+    | TK_IDENTIFIER 'q' expression 'p' '=' expression
+    | TK_IDENTIFIER '=' expression
+
+    | '{' command_list '}'
+
+    |
+
     ;
 
 parameter_definition
     : type_definition parameter_definition
     | type_definition 'q' LIT_INTEGER 'p' parameter_definition
     | ',' parameter_definition
+    |
+    ;
+
+parameter_list
+    : expression parameter_list
+    | ',' parameter_list
     |
     ;
 
@@ -129,8 +130,7 @@ type_definition
     ;
 
 expression
-    : 'd' expression 'b'
-    | LIT_INTEGER
+    : LIT_INTEGER
     | LIT_FLOAT
     | LIT_CHAR
     | LIT_STRING
@@ -149,6 +149,7 @@ expression
     | OPERATOR_NOT expression
     | TK_IDENTIFIER 'd' parameter_list 'b'
     | TK_IDENTIFIER 'q' expression 'p'
+    | 'd' expression 'b'
     ;
 %%
 
