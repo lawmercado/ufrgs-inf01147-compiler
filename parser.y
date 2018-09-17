@@ -60,8 +60,8 @@ int getLineNumber(void);
 %%
 
 program
-    : declaration
-    | program declaration
+    : program declaration
+    | declaration
     ;
 
 declaration
@@ -95,7 +95,7 @@ command
 
     | KW_WHILE expression command
 
-    | KW_PRINT parameter_list
+    | KW_PRINT print_parameter_list
 
     | KW_RETURN expression
 
@@ -123,6 +123,13 @@ parameter_list
     |
     ;
 
+print_parameter_list
+    : expression print_parameter_list
+    | LIT_STRING print_parameter_list
+    | ',' print_parameter_list
+    |
+    ;
+
 type_definition
     : KW_INT TK_IDENTIFIER
     | KW_FLOAT TK_IDENTIFIER
@@ -133,7 +140,6 @@ expression
     : LIT_INTEGER
     | LIT_FLOAT
     | LIT_CHAR
-    | LIT_STRING
     | TK_IDENTIFIER
     | expression '+' expression
     | expression '-' expression
