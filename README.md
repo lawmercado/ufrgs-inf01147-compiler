@@ -1,4 +1,4 @@
-# ufrgs-inf01147-tp
+# ufrgs-inf01147-compiler
 Compilers module final assignment. Currently in the second phase.
 
 ## Running
