@@ -7,8 +7,10 @@
  * @author Nicholas de Aquino Lau [nalau@inf.ufrgs.br]
  */
 
-#include "y.tab.h"
+
 #include "hash.h"
+#include "ast.h"
+#include "y.tab.h"
 
 void initMe(void);
 int isRunning(void);

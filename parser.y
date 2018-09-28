@@ -8,6 +8,8 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include "hash.h"
+#include "ast.h"
 
 int yylex(void);
 int yyerror(char *);
@@ -21,6 +23,7 @@ int getLineNumber(void);
     char* stringValue;
     char charValue;
     struct hash_node* symbol;
+    struct ast_node *ast;
 }
 
 %token KW_CHAR
@@ -46,6 +49,11 @@ int getLineNumber(void);
 %token<stringValue> LIT_STRING
 %token TOKEN_ERROR
 %token TOKEN_UNKNOWN
+
+%type<ast> expression
+%type<ast> command
+%type<ast> command_list
+%type<ast> print_parameter_list
 
 %start program
 
@@ -85,21 +93,21 @@ functions_definition
     ;
 
 command_list
-    : command ';' command_list
+    : command ';' command_list  { $$ = astCreate(AST_LCMD, 0,$1,$3,0,0); }
     |
     ;
 
 command
-    : KW_IF expression KW_THEN command
-    | KW_IF expression KW_THEN command KW_ELSE command
+    : KW_IF expression KW_THEN command { $$ = astCreate(AST_IF,0,$2,$4,0,0); }
+    | KW_IF expression KW_THEN command KW_ELSE command { $$ = astCreate(AST_IFTE,0,$2,$4,0,0); }
 
-    | KW_WHILE expression command
+    | KW_WHILE expression command { $$ = astCreate(AST_WHILE,0,$2,$3,0,0); }
 
-    | KW_PRINT print_parameter_list
+    | KW_PRINT print_parameter_list { $$ = astCreate(AST_PRINT,0,$2,0,0,0); }
 
-    | KW_RETURN expression
+    | KW_RETURN expression { $$ = astCreate(AST_RETURN,0,$2,0,0,0); }
 
-    | KW_READ TK_IDENTIFIER
+    | KW_READ TK_IDENTIFIER { $$ = astCreate(AST_READ,1,0,0,0,0); }
 
     | TK_IDENTIFIER 'q' expression 'p' '=' expression
     | TK_IDENTIFIER '=' expression
@@ -137,25 +145,25 @@ type_definition
     ;
 
 expression
-    : LIT_INTEGER
-    | LIT_FLOAT
-    | LIT_CHAR
-    | TK_IDENTIFIER
-    | expression '+' expression
-    | expression '-' expression
-    | expression '*' expression
-    | expression '/' expression
-    | expression '<' expression
-    | expression '>' expression
-    | expression OPERATOR_GE expression
-    | expression OPERATOR_LE expression
-    | expression OPERATOR_EQ expression
-    | expression OPERATOR_AND expression
-    | expression OPERATOR_OR expression
-    | OPERATOR_NOT expression
-    | TK_IDENTIFIER 'd' parameter_list 'b'
-    | TK_IDENTIFIER 'q' expression 'p'
-    | 'd' expression 'b'
+    : LIT_INTEGER   { $$ = astCreate(AST_SYMBOL,$1,0,0,0,0); }
+    | LIT_FLOAT     { $$ = astCreate(AST_SYMBOL,$1,0,0,0,0); }
+    | LIT_CHAR      { $$ = astCreate(AST_SYMBOL,$1,0,0,0,0); }
+    | TK_IDENTIFIER { $$ = astCreate(AST_SYMBOL,$1,0,0,0,0); }
+    | expression '+' expression     { $$ = astCreate(AST_ADD,0,$1,$3,0,0); }
+    | expression '-' expression     { $$ = astCreate(AST_SUB,0,$1,$3,0,0); }
+    | expression '*' expression     { $$ = astCreate(AST_MUL,0,$1,$3,0,0); }
+    | expression '/' expression     { $$ = astCreate(AST_DIV,0,$1,$3,0,0); }
+    | expression '<' expression     { $$ = astCreate(AST_LESS,0,$1,$3,0,0); }
+    | expression '>' expression     { $$ = astCreate(AST_GREATER,0,$1,$3,0,0); }
+    | expression OPERATOR_GE expression     { $$ = astCreate(AST_GE,0,$1,$3,0,0); }
+    | expression OPERATOR_LE expression     { $$ = astCreate(AST_LE,0,$1,$3,0,0); }
+    | expression OPERATOR_EQ expression     { $$ = astCreate(AST_EQ,0,$1,$3,0,0); }
+    | expression OPERATOR_AND expression    { $$ = astCreate(AST_AND,0,$1,$3,0,0); }
+    | expression OPERATOR_OR expression     { $$ = astCreate(AST_OR,0,$1,$3,0,0); }
+    | OPERATOR_NOT expression       { $$ = astCreate(AST_NOT,0,$2,0,0,0); }
+    | TK_IDENTIFIER 'd' parameter_list 'b'  { $$ = 0; }
+    | TK_IDENTIFIER 'q' expression 'p'  { $$ = 0; }
+    | 'd' expression 'b'    { $$ = 0; }
     ;
 %%
 

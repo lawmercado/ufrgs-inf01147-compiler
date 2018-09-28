@@ -1,13 +1,14 @@
+#ifndef HASH_HEADER
+#define HASH_HEADER
 /**
  * Hash table definitions
  *
  * @author Luís Augusto Weber Mercado [lawmercado@inf.ufrgs.br]
  * @author Nicholas de Aquino Lau [nalau@inf.ufrgs.br]
  */
-
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+ #include <stdlib.h>
+ #include <stdio.h>
+ #include <string.h>
 
 #define HASH_SIZE 997
 #define SYMBOL_LIT_INTEGER 1
@@ -33,3 +34,5 @@ HASH_NODE* hashInsert(int type, char *text);
 HASH_NODE* hashFind(char *text);
 
 void hashPrint(void);
+
+#endif
