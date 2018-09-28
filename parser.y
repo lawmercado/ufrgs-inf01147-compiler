@@ -81,7 +81,7 @@ AST_NODE* ast = NULL;
 %%
 
 program
-    : program declaration { $$ = astCreate(AST_DEC, 0, $1, $2, 0, 0); ast = $$; }
+    : program declaration { ast = $$ = astCreate(AST_DEC, 0, $1, $2, 0, 0); }
     | declaration
     ;
 
@@ -97,8 +97,8 @@ varibales_definition
     ;
 
 literal_list
-    : literal_list literal { $$ = astCreate(AST_LIT_LIST, 0, $1, $2, 0, 0); }
-    | literal
+    : literal_list literal { $$ = astCreate(AST_LIT_LIST, 0, $2, $1, 0, 0); }
+    | literal { $$ = astCreate(AST_LIT_LIST, 0, $1, 0, 0, 0); }
     ;
 
 functions_definition
@@ -128,8 +128,8 @@ block
     ;
 
 parameter_definition_list
-    : parameter_definition_list ',' parameter_definition { $$ = astCreate(AST_PARAM_LIST, 0, $1, $3, 0, 0); }
-    | parameter_definition
+    : parameter_definition_list ',' parameter_definition { $$ = astCreate(AST_PARAM_LIST, 0, $3, $1, 0, 0); }
+    | parameter_definition { $$ = astCreate(AST_PARAM_LIST, 0, $1, 0, 0, 0); }
     | { $$ = 0; }
     ;
 
@@ -139,14 +139,14 @@ parameter_definition
     ;
 
 parameter_list
-    : parameter_list ',' expression { $$ = astCreate(AST_PARAM_LIST, 0, $1, $3, 0, 0); }
-    | expression
+    : parameter_list ',' expression { $$ = astCreate(AST_PARAM_LIST, 0, $3, $1, 0, 0); }
+    | expression { $$ = astCreate(AST_PARAM_LIST, 0, $1, 0, 0, 0); }
     | { $$ = 0; }
     ;
 
 print_parameter_list
     : print_parameter_list ',' print_parameter { $$ = astCreate(AST_PARAM_LIST, 0, $1, $3, 0, 0); }
-    | print_parameter
+    | print_parameter { $$ = astCreate(AST_PARAM_LIST, 0, $1, 0, 0, 0); }
     | { $$ = 0; }
     ;
 

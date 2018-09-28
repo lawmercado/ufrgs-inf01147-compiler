@@ -1,6 +1,6 @@
 int a = 0;
 int i = 0;
-int v q10p: 0 0 0 0 0 0 0 0 0 0;
+int v q10p: 0 0 0 0 0 0 0 0 0 40;
 int mat q10p;
 float f = 10.55;
 char c = 'x';
@@ -78,7 +78,22 @@ int main db {
   {};
   }
 
+int incn d int x, char oi b
+  {
+  return x+n;
+  }
+
+int incn d int x b
+    {
+    return x+n;
+    }
+
 int incn d int x, int n, int x2, int n2, int x3, int n3, int oiq5p b
   {
   return x+n;
   }
+
+  int incn d int xq80p, int x3, int oiq5p, int n3 b
+    {
+    return x+n;
+    }

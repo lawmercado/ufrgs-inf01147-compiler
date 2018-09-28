@@ -57,4 +57,6 @@ AST_NODE* astCreate(int type, HASH_NODE *symbol, AST_NODE *son0, AST_NODE *son1,
 
 void astPrint(AST_NODE *node, int level);
 
+void astGenerateSource(AST_NODE *node, FILE *file);
+
 #endif

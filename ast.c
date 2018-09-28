@@ -23,7 +23,7 @@ void astPrint(AST_NODE *node, int level)
 
     for (i = 0; i < level; i++)
     {
-        fprintf(stderr, "|   ");
+        fprintf(stderr, "|  ");
     }
 
     fprintf(stderr, "|");
@@ -91,11 +91,338 @@ void astPrint(AST_NODE *node, int level)
     {
         astPrint(node->son[i], level+1);
     }
+}
 
-    // for (i = 0; i < level; i++)
-    // {
-    //     fprintf(stderr, "   ");
-    // }
-    //
-    // fprintf(stderr, ");\n");
+void astGenerateSource(AST_NODE *node, FILE *file)
+{
+    int i;
+
+    static int level = 0;
+
+    if(node == 0)
+    {
+        return;
+    }
+
+    switch (node->type)
+    {
+        case AST_DEC:
+        {
+            for(i = 0; i < MAX_SONS; i++)
+            {
+                astGenerateSource(node->son[i], file);
+            }
+
+            break;
+        }
+        case AST_VAR_DEC:
+        {
+            astGenerateSource(node->son[0], file);
+
+            fprintf(file, " = ");
+
+            astGenerateSource(node->son[1], file);
+
+            fprintf(file, ";\n");
+
+            break;
+        }
+        case AST_VEC_DEC:
+        {
+            astGenerateSource(node->son[0], file);
+
+            fprintf(file, " q%sp", node->son[1]->symbol->text);
+
+            if(node->son[2] != 0)
+            {
+                fprintf(file, ": ");
+
+                astGenerateSource(node->son[2], file);
+            }
+
+            fprintf(file, ";\n");
+
+            break;
+        }
+        case AST_FUNC_DEC:
+        {
+            astGenerateSource(node->son[0], file);
+
+            fprintf(file, " d ");
+
+            astGenerateSource(node->son[1], file);
+
+            fprintf(file, " b\n");
+
+            astGenerateSource(node->son[2], file);
+
+            fprintf(file, "\n");
+
+            break;
+        }
+        case AST_PARAM_LIST:
+        {
+            if(node->son[1] != 0)
+            {
+                if(node->son[1]->type == AST_PARAM_LIST)
+                {
+                    astGenerateSource(node->son[1], file);
+
+                    fprintf(file, ", ");
+                }
+            }
+
+            astGenerateSource(node->son[0], file);
+
+            break;
+        }
+        case AST_LIT_LIST:
+        {
+            if(node->son[1] != 0)
+            {
+                astGenerateSource(node->son[1], file);
+
+                fprintf(file, " ");
+            }
+
+            astGenerateSource(node->son[0], file);
+
+            break;
+        }
+        case AST_VEC_PARAM:
+        {
+            astGenerateSource(node->son[0], file);
+            fprintf(file, " q%sp", node->son[1]->symbol->text);
+
+            break;
+        }
+        case AST_CMD_LIST:
+        {
+            astGenerateSource(node->son[0], file);
+            fprintf(file, ";\n");
+            astGenerateSource(node->son[1], file);
+
+            break;
+        }
+        case AST_IF:
+        {
+            for (i = 0; i < level; i++) fprintf(file, "    ");
+            fprintf(file, "if ");
+            astGenerateSource(node->son[0], file);
+            fprintf(file, " then\n");
+            for (i = 0; i < level; i++) fprintf(file, "    ");
+            astGenerateSource(node->son[1], file);
+
+            break;
+        }
+        case AST_IFELSE:
+        {
+            for (i = 0; i < level; i++) fprintf(file, "    ");
+            fprintf(file, "if ");
+            astGenerateSource(node->son[0], file);
+            fprintf(file, " then\n");
+            for (i = 0; i < level; i++) fprintf(file, "    ");
+            astGenerateSource(node->son[1], file);
+            fprintf(file, "\n");
+            for (i = 0; i < level; i++) fprintf(file, "    ");
+            fprintf(file, "else\n");
+            for (i = 0; i < level; i++) fprintf(file, "    ");
+            astGenerateSource(node->son[2], file);
+
+            break;
+        }
+        case AST_WHILE:
+        {
+            for (i = 0; i < level; i++) fprintf(file, "    ");
+            fprintf(file, "while ");
+            astGenerateSource(node->son[0], file);
+            fprintf(file, "\n");
+            for (i = 0; i < level; i++) fprintf(file, "    ");
+            astGenerateSource(node->son[1], file);
+
+            break;
+        }
+        case AST_PRINT:
+        {
+            for (i = 0; i < level; i++) fprintf(file, "    ");
+            fprintf(file, "print ");
+            astGenerateSource(node->son[0], file);
+
+            break;
+        }
+        case AST_RETURN:
+        {
+            for (i = 0; i < level; i++) fprintf(file, "    ");
+            fprintf(file, "return ");
+            astGenerateSource(node->son[0], file);
+
+            break;
+        }
+        case AST_READ:
+        {
+            for (i = 0; i < level; i++) fprintf(file, "    ");
+            fprintf(file, "read ");
+            astGenerateSource(node->son[0], file);
+
+            break;
+        }
+        case AST_ATTRIB:
+        {
+            for (i = 0; i < level; i++) fprintf(file, "    ");
+            astGenerateSource(node->son[0], file);
+            fprintf(file, " = ");
+            astGenerateSource(node->son[1], file);
+
+            break;
+        }
+        case AST_VEC_ATTRIB:
+        {
+            for (i = 0; i < level; i++) fprintf(file, "    ");
+            astGenerateSource(node->son[0], file);
+            fprintf(file, "q");
+            astGenerateSource(node->son[1], file);
+            fprintf(file, "p");
+            fprintf(file, " = ");
+            astGenerateSource(node->son[2], file);
+
+            break;
+        }
+        case AST_BLK:
+        {
+            fprintf(file, "{\n");
+            level++;
+            astGenerateSource(node->son[0], file);
+            level--;
+            for (i = 0; i < level; i++) fprintf(file, "    ");
+            fprintf(file, "}");
+
+            break;
+        }
+        case AST_DB:
+        {
+            fprintf(file, "d");
+            astGenerateSource(node->son[0], file);
+            fprintf(file, "b");
+
+            break;
+        }
+        case AST_VEC:
+        {
+            astGenerateSource(node->son[0], file);
+            fprintf(file, "q");
+            astGenerateSource(node->son[1], file);
+            fprintf(file, "p");
+
+            break;
+        }
+        case AST_FUNC_CALL:
+        {
+            astGenerateSource(node->son[0], file);
+            fprintf(file, "d ");
+            astGenerateSource(node->son[1], file);
+            fprintf(file, " b");
+
+            break;
+        }
+        case AST_ADD:
+        {
+            astGenerateSource(node->son[0], file);
+            fprintf(file, " + ");
+            astGenerateSource(node->son[1], file);
+
+            break;
+        }
+        case AST_SUB:
+        {
+            astGenerateSource(node->son[0], file);
+            fprintf(file, " - ");
+            astGenerateSource(node->son[1], file);
+
+            break;
+        }
+        case AST_MUL:
+        {
+            astGenerateSource(node->son[0], file);
+            fprintf(file, " * ");
+            astGenerateSource(node->son[1], file);
+
+            break;
+        }
+        case AST_DIV:
+        {
+            astGenerateSource(node->son[0], file);
+            fprintf(file, " / ");
+            astGenerateSource(node->son[1], file);
+
+            break;
+        }
+        case AST_LESS:
+        {
+            astGenerateSource(node->son[0], file);
+            fprintf(file, " < ");
+            astGenerateSource(node->son[1], file);
+
+            break;
+        }
+        case AST_GREATER:
+        {
+            astGenerateSource(node->son[0], file);
+            fprintf(file, " > ");
+            astGenerateSource(node->son[1], file);
+
+            break;
+        }
+        case AST_GEQUAL:
+        {
+            astGenerateSource(node->son[0], file);
+            fprintf(file, " >= ");
+            astGenerateSource(node->son[1], file);
+
+            break;
+        }
+        case AST_LEQUAL:
+        {
+            astGenerateSource(node->son[0], file);
+            fprintf(file, " <= ");
+            astGenerateSource(node->son[1], file);
+
+            break;
+        }
+        case AST_EQUAL:
+        {
+            astGenerateSource(node->son[0], file);
+            fprintf(file, " == ");
+            astGenerateSource(node->son[1], file);
+
+            break;
+        }
+        case AST_AND:
+        {
+            astGenerateSource(node->son[0], file);
+            fprintf(file, " and ");
+            astGenerateSource(node->son[1], file);
+
+            break;
+        }
+        case AST_OR:
+        {
+            astGenerateSource(node->son[0], file);
+            fprintf(file, " or ");
+            astGenerateSource(node->son[1], file);
+
+            break;
+        }
+        case AST_NOT:
+        {
+            fprintf(file, "not ");
+            astGenerateSource(node->son[0], file);
+
+            break;
+        }
+        case AST_INT_DEF: fprintf(file, "int %s", node->symbol->text); break;
+        case AST_FLOAT_DEF: fprintf(file, "float %s", node->symbol->text); break;
+        case AST_CHAR_DEF: fprintf(file, "char %s", node->symbol->text); break;
+        case AST_SYMBOL: fprintf(file, "%s", node->symbol->text); break;
+        default: fprintf(file, "OI"); break;
+    }
 }
