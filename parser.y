@@ -14,16 +14,15 @@
 int yylex(void);
 int yyerror(char *);
 int getLineNumber(void);
+AST_NODE* getAST(void);
+
+AST_NODE* ast = NULL;
 
 %}
 
 %union {
-    int intValue;
-    float floatValue;
-    char* stringValue;
-    char charValue;
-    struct hash_node* symbol;
-    struct ast_node *ast;
+    HASH_NODE *symbol;
+    AST_NODE *ast_node;
 }
 
 %token KW_CHAR
@@ -42,18 +41,32 @@ int getLineNumber(void);
 %token OPERATOR_OR
 %token OPERATOR_AND
 %token OPERATOR_NOT
-%token<stringValue> TK_IDENTIFIER
-%token<intValue> LIT_INTEGER
-%token<floatValue> LIT_FLOAT
-%token<charValue> LIT_CHAR
-%token<stringValue> LIT_STRING
+%token<symbol> TK_IDENTIFIER
+%token<symbol> LIT_INTEGER
+%token<symbol> LIT_FLOAT
+%token<symbol> LIT_CHAR
+%token<symbol> LIT_STRING
 %token TOKEN_ERROR
 %token TOKEN_UNKNOWN
 
-%type<ast> expression
-%type<ast> command
-%type<ast> command_list
-%type<ast> print_parameter_list
+%type<ast_node> program
+%type<ast_node> declaration
+%type<ast_node> varibales_definition
+%type<ast_node> functions_definition
+%type<ast_node> parameter_definition_list
+%type<ast_node> parameter_definition
+%type<ast_node> type_definition
+%type<ast_node> parameter_list
+%type<ast_node> command_list
+%type<ast_node> command
+%type<ast_node> block
+%type<ast_node> expression
+%type<ast_node> literal_list
+%type<ast_node> literal
+%type<ast_node> print_parameter_list
+%type<ast_node> print_parameter
+%type<ast_node> integer
+%type<ast_node> identifier
 
 %start program
 
@@ -68,7 +81,7 @@ int getLineNumber(void);
 %%
 
 program
-    : program declaration
+    : program declaration { $$ = astCreate(AST_DEC, 0, $1, $2, 0, 0); ast = $$; }
     | declaration
     ;
 
@@ -78,92 +91,108 @@ declaration
     ;
 
 varibales_definition
-    : type_definition '=' expression
-    | type_definition 'q' LIT_INTEGER 'p' array_initialization
+    : type_definition '=' expression { $$ = astCreate(AST_VAR_DEC, 0, $1, $3, 0, 0); }
+    | type_definition 'q' integer 'p' { $$ = astCreate(AST_VEC_DEC, 0, $1, $3, 0, 0); }
+    | type_definition 'q' integer 'p' ':' literal_list { $$ = astCreate(AST_VEC_DEC, 0, $1, $3, $6, 0); }
     ;
 
-array_initialization
-    : ':' array_initialization
-    | expression array_initialization
-    |
+literal_list
+    : literal_list literal { $$ = astCreate(AST_LIT_LIST, 0, $1, $2, 0, 0); }
+    | literal
     ;
 
 functions_definition
-    : type_definition 'd' parameter_definition 'b' '{' command_list '}'
+    : type_definition 'd' parameter_definition_list 'b' block { $$ = astCreate(AST_FUNC_DEC, 0, $1, $3, $5, 0); }
     ;
 
 command_list
-    : command ';' command_list  { $$ = astCreate(AST_LCMD, 0,$1,$3,0,0); }
-    |
+    : command ';' command_list { $$ = astCreate(AST_CMD_LIST, 0, $1, $3, 0, 0); }
+    | { $$ = 0; }
     ;
 
 command
-    : KW_IF expression KW_THEN command { $$ = astCreate(AST_IF,0,$2,$4,0,0); }
-    | KW_IF expression KW_THEN command KW_ELSE command { $$ = astCreate(AST_IFTE,0,$2,$4,0,0); }
+    : KW_IF expression KW_THEN command { $$ = astCreate(AST_IF, 0, $2, $4, 0, 0); }
+    | KW_IF expression KW_THEN command KW_ELSE command { $$ = astCreate(AST_IFELSE, 0, $2, $4, $6, 0); }
+    | KW_WHILE expression command { $$ = astCreate(AST_WHILE, 0, $2, $3, 0, 0); }
+    | KW_PRINT print_parameter_list { $$ = astCreate(AST_PRINT, 0, $2, 0, 0, 0); }
+    | KW_RETURN expression { $$ = astCreate(AST_RETURN, 0, $2, 0, 0, 0); }
+    | KW_READ identifier { $$ = astCreate(AST_READ, 0, $2, 0, 0, 0); }
+    | identifier 'q' expression 'p' '=' expression { $$ = astCreate(AST_VEC_ATTRIB, 0, $1, $3, $6, 0); }
+    | identifier '=' expression { $$ = astCreate(AST_ATTRIB, 0, $1, $3, 0, 0); }
+    | block
+    | { $$ = 0; }
+    ;
 
-    | KW_WHILE expression command { $$ = astCreate(AST_WHILE,0,$2,$3,0,0); }
+block
+    : '{' command_list '}' { $$ = astCreate(AST_BLK, 0, $2, 0, 0, 0); }
+    ;
 
-    | KW_PRINT print_parameter_list { $$ = astCreate(AST_PRINT,0,$2,0,0,0); }
-
-    | KW_RETURN expression { $$ = astCreate(AST_RETURN,0,$2,0,0,0); }
-
-    | KW_READ TK_IDENTIFIER { $$ = astCreate(AST_READ,1,0,0,0,0); }
-
-    | TK_IDENTIFIER 'q' expression 'p' '=' expression
-    | TK_IDENTIFIER '=' expression
-
-    | '{' command_list '}'
-
-    |
-
+parameter_definition_list
+    : parameter_definition_list ',' parameter_definition { $$ = astCreate(AST_PARAM_LIST, 0, $1, $3, 0, 0); }
+    | parameter_definition
+    | { $$ = 0; }
     ;
 
 parameter_definition
-    : type_definition parameter_definition
-    | type_definition 'q' LIT_INTEGER 'p' parameter_definition
-    | ',' parameter_definition
-    |
+    : type_definition 'q' integer 'p' { $$ = astCreate(AST_VEC_PARAM, 0, $1, $3, 0, 0); }
+    | type_definition
     ;
 
 parameter_list
-    : expression parameter_list
-    | ',' parameter_list
-    |
+    : parameter_list ',' expression { $$ = astCreate(AST_PARAM_LIST, 0, $1, $3, 0, 0); }
+    | expression
+    | { $$ = 0; }
     ;
 
 print_parameter_list
-    : expression print_parameter_list
-    | LIT_STRING print_parameter_list
-    | ',' print_parameter_list
-    |
+    : print_parameter_list ',' print_parameter { $$ = astCreate(AST_PARAM_LIST, 0, $1, $3, 0, 0); }
+    | print_parameter
+    | { $$ = 0; }
+    ;
+
+print_parameter
+    : expression
+    | LIT_STRING { $$ = astCreate(AST_SYMBOL, $1, 0, 0, 0, 0); }
     ;
 
 type_definition
-    : KW_INT TK_IDENTIFIER
-    | KW_FLOAT TK_IDENTIFIER
-    | KW_CHAR TK_IDENTIFIER
+    : KW_INT TK_IDENTIFIER { $$ = astCreate(AST_INT_DEF, $2, 0, 0, 0, 0); }
+    | KW_FLOAT TK_IDENTIFIER { $$ = astCreate(AST_FLOAT_DEF, $2, 0, 0, 0, 0); }
+    | KW_CHAR TK_IDENTIFIER { $$ = astCreate(AST_CHAR_DEF, $2, 0, 0, 0, 0); }
+    ;
+
+literal
+    : integer
+    | LIT_FLOAT { $$ = astCreate(AST_SYMBOL, $1, 0, 0, 0, 0); }
+    | LIT_CHAR { $$ = astCreate(AST_SYMBOL, $1, 0, 0, 0, 0); }
+    ;
+
+integer
+    : LIT_INTEGER { $$ = astCreate(AST_SYMBOL, $1, 0, 0, 0, 0); }
+    ;
+
+identifier
+    : TK_IDENTIFIER { $$ = astCreate(AST_SYMBOL, $1, 0, 0, 0, 0); }
     ;
 
 expression
-    : LIT_INTEGER   { $$ = astCreate(AST_SYMBOL,$1,0,0,0,0); }
-    | LIT_FLOAT     { $$ = astCreate(AST_SYMBOL,$1,0,0,0,0); }
-    | LIT_CHAR      { $$ = astCreate(AST_SYMBOL,$1,0,0,0,0); }
-    | TK_IDENTIFIER { $$ = astCreate(AST_SYMBOL,$1,0,0,0,0); }
-    | expression '+' expression     { $$ = astCreate(AST_ADD,0,$1,$3,0,0); }
-    | expression '-' expression     { $$ = astCreate(AST_SUB,0,$1,$3,0,0); }
-    | expression '*' expression     { $$ = astCreate(AST_MUL,0,$1,$3,0,0); }
-    | expression '/' expression     { $$ = astCreate(AST_DIV,0,$1,$3,0,0); }
-    | expression '<' expression     { $$ = astCreate(AST_LESS,0,$1,$3,0,0); }
-    | expression '>' expression     { $$ = astCreate(AST_GREATER,0,$1,$3,0,0); }
-    | expression OPERATOR_GE expression     { $$ = astCreate(AST_GE,0,$1,$3,0,0); }
-    | expression OPERATOR_LE expression     { $$ = astCreate(AST_LE,0,$1,$3,0,0); }
-    | expression OPERATOR_EQ expression     { $$ = astCreate(AST_EQ,0,$1,$3,0,0); }
-    | expression OPERATOR_AND expression    { $$ = astCreate(AST_AND,0,$1,$3,0,0); }
-    | expression OPERATOR_OR expression     { $$ = astCreate(AST_OR,0,$1,$3,0,0); }
-    | OPERATOR_NOT expression       { $$ = astCreate(AST_NOT,0,$2,0,0,0); }
-    | TK_IDENTIFIER 'd' parameter_list 'b'  { $$ = 0; }
-    | TK_IDENTIFIER 'q' expression 'p'  { $$ = 0; }
-    | 'd' expression 'b'    { $$ = 0; }
+    : literal
+    | identifier
+    | expression '+' expression { $$ = astCreate(AST_ADD, 0, $1, $3, 0, 0); }
+    | expression '-' expression { $$ = astCreate(AST_SUB, 0, $1, $3, 0, 0); }
+    | expression '*' expression { $$ = astCreate(AST_MUL, 0, $1, $3, 0, 0); }
+    | expression '/' expression { $$ = astCreate(AST_DIV, 0, $1, $3, 0, 0); }
+    | expression '<' expression { $$ = astCreate(AST_LESS, 0, $1, $3, 0, 0); }
+    | expression '>' expression { $$ = astCreate(AST_GREATER, 0, $1, $3, 0, 0); }
+    | expression OPERATOR_GE expression { $$ = astCreate(AST_GEQUAL, 0, $1, $3, 0, 0); }
+    | expression OPERATOR_LE expression { $$ = astCreate(AST_LEQUAL, 0, $1, $3, 0, 0); }
+    | expression OPERATOR_EQ expression { $$ = astCreate(AST_EQUAL, 0, $1, $3, 0, 0); }
+    | expression OPERATOR_AND expression { $$ = astCreate(AST_AND, 0, $1, $3, 0, 0); }
+    | expression OPERATOR_OR expression { $$ = astCreate(AST_OR, 0, $1, $3, 0, 0); }
+    | OPERATOR_NOT expression { $$ = astCreate(AST_NOT, 0, $2, 0, 0, 0); }
+    | identifier 'd' parameter_list 'b' { $$ = astCreate(AST_FUNC_CALL, 0, $1, $3, 0, 0); }
+    | identifier 'q' expression 'p' { $$ = astCreate(AST_VEC, 0, $1, $3, 0, 0); }
+    | 'd' expression 'b' { $$ = astCreate(AST_DB, 0, $2, 0, 0, 0); }
     ;
 %%
 
@@ -171,4 +200,9 @@ int yyerror(char *s)
 {
     fprintf(stderr, "ERROR parsing the source code at line %d: %s\n", getLineNumber(), s);
     exit(3);
+}
+
+AST_NODE* getAST()
+{
+    return ast;
 }

@@ -5,27 +5,45 @@
 #include <stdio.h>
 
 #define MAX_SONS 4
-#define AST_SYMBOL 1
-#define AST_ADD 2
-#define AST_SUB 3
-#define AST_MUL 4
-#define AST_DIV 5
-#define AST_LESS 6
-#define AST_GREATER 7
-#define AST_GE 8
-#define AST_LE 9
-#define AST_EQ 10
-#define AST_AND 11
-#define AST_OR 12
-#define AST_NOT 13
-#define AST_LCMD 14
-#define AST_IF 15
-#define AST_IFTE 16
-#define AST_WHILE 17
-#define AST_PRINT 18
-#define AST_RETURN 19
-#define AST_READ 20
 
+enum AST_NODE_TYPE {
+    AST_DEC,
+    AST_INT_DEF,
+    AST_FLOAT_DEF,
+    AST_CHAR_DEF,
+    AST_VAR_DEC,
+    AST_VEC_DEC,
+    AST_FUNC_DEC,
+    AST_PARAM_LIST,
+    AST_VEC_PARAM,
+    AST_LIT_LIST,
+    AST_CMD_LIST,
+    AST_IF,
+    AST_IFELSE,
+    AST_WHILE,
+    AST_PRINT,
+    AST_RETURN,
+    AST_READ,
+    AST_SYMBOL,
+    AST_ADD,
+    AST_SUB,
+    AST_MUL,
+    AST_DIV,
+    AST_LESS,
+    AST_GREATER,
+    AST_GEQUAL,
+    AST_LEQUAL,
+    AST_EQUAL,
+    AST_AND,
+    AST_OR,
+    AST_NOT,
+    AST_VEC,
+    AST_FUNC_CALL,
+    AST_ATTRIB,
+    AST_VEC_ATTRIB,
+    AST_BLK,
+    AST_DB,
+};
 
 typedef struct ast_node
 {
@@ -33,10 +51,10 @@ typedef struct ast_node
     struct ast_node *son[MAX_SONS];
     HASH_NODE *symbol;
 
-} AST;
+} AST_NODE;
 
-AST* astCreate(int type, HASH_NODE *symbol, AST *son0, AST *son1, AST *son2, AST *son3);
+AST_NODE* astCreate(int type, HASH_NODE *symbol, AST_NODE *son0, AST_NODE *son1, AST_NODE *son2, AST_NODE *son3);
 
-void astPrint(AST *node, int level);
+void astPrint(AST_NODE *node, int level);
 
 #endif
