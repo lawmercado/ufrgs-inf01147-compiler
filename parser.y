@@ -145,7 +145,7 @@ parameter_list
     ;
 
 print_parameter_list
-    : print_parameter_list ',' print_parameter { $$ = astCreate(AST_PARAM_LIST, 0, $1, $3, 0, 0); }
+    : print_parameter_list ',' print_parameter { $$ = astCreate(AST_PARAM_LIST, 0, $3, $1, 0, 0); }
     | print_parameter { $$ = astCreate(AST_PARAM_LIST, 0, $1, 0, 0, 0); }
     | { $$ = 0; }
     ;

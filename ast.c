@@ -279,10 +279,9 @@ void astGenerateSource(AST_NODE *node, FILE *file)
         {
             for (i = 0; i < level; i++) fprintf(file, "    ");
             astGenerateSource(node->son[0], file);
-            fprintf(file, "q");
+            fprintf(file, " q");
             astGenerateSource(node->son[1], file);
-            fprintf(file, "p");
-            fprintf(file, " = ");
+            fprintf(file, "p = ");
             astGenerateSource(node->son[2], file);
 
             break;
@@ -300,16 +299,16 @@ void astGenerateSource(AST_NODE *node, FILE *file)
         }
         case AST_DB:
         {
-            fprintf(file, "d");
+            fprintf(file, "d ");
             astGenerateSource(node->son[0], file);
-            fprintf(file, "b");
+            fprintf(file, " b");
 
             break;
         }
         case AST_VEC:
         {
             astGenerateSource(node->son[0], file);
-            fprintf(file, "q");
+            fprintf(file, " q");
             astGenerateSource(node->son[1], file);
             fprintf(file, "p");
 
