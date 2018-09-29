@@ -51,11 +51,14 @@ int main(int argc, char** argv)
 
     if( result == 0 )
     {
-        fprintf(stderr, "Accepted source code!\n");
-        // fprintf(stderr, "The hash table for the symbols of the input file is: \n");
-        // hashPrint();
+        fprintf(stderr, "The hash table for the symbols of the input file is: \n");
+        hashPrint();
+        fprintf(stderr, "\nThe syntactical tree for the input file is: \n");
         astPrint(getAST(), 0);
         astGenerateSource(getAST(), outputFile);
+
+        fprintf(stderr, "\nAccepted source code!\n");
+        fprintf(stderr, "\nThe generated source code is in the '%s' file.\n", argv[2]);
 
         exit(0);
     }
