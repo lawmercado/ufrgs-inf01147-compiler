@@ -1,6 +1,6 @@
 %{
 /**
- * Syntactical analyser for using with yacc
+ * Syntactical analyser to use with yacc
  *
  * @author Luís Augusto Weber Mercado [lawmercado@inf.ufrgs.br]
  * @author Nicholas de Aquino Lau [nalau@inf.ufrgs.br]
@@ -16,7 +16,7 @@ int yyerror(char *);
 int getLineNumber(void);
 AST_NODE* getAST(void);
 
-AST_NODE* ast = NULL;
+AST_NODE* root = NULL;
 
 %}
 
@@ -51,20 +51,20 @@ AST_NODE* ast = NULL;
 
 %type<ast_node> program
 %type<ast_node> declaration
+%type<ast_node> type_definition
 %type<ast_node> varibales_definition
 %type<ast_node> functions_definition
 %type<ast_node> parameter_definition_list
 %type<ast_node> parameter_definition
-%type<ast_node> type_definition
 %type<ast_node> parameter_list
+%type<ast_node> print_parameter_list
+%type<ast_node> print_parameter
+%type<ast_node> literal_list
+%type<ast_node> literal
 %type<ast_node> command_list
 %type<ast_node> command
 %type<ast_node> block
 %type<ast_node> expression
-%type<ast_node> literal_list
-%type<ast_node> literal
-%type<ast_node> print_parameter_list
-%type<ast_node> print_parameter
 %type<ast_node> integer
 %type<ast_node> identifier
 
@@ -81,7 +81,7 @@ AST_NODE* ast = NULL;
 %%
 
 program
-    : program declaration { ast = $$ = astCreate(AST_DEC, 0, $1, $2, 0, 0); }
+    : program declaration { root = $$ = astCreate(AST_DEC, 0, $1, $2, 0, 0); }
     | declaration
     ;
 
@@ -101,8 +101,35 @@ literal_list
     | literal { $$ = astCreate(AST_LIT_LIST, 0, $1, 0, 0, 0); }
     ;
 
+literal
+    : integer
+    | LIT_FLOAT { $$ = astCreate(AST_SYMBOL, $1, 0, 0, 0, 0); }
+    | LIT_CHAR { $$ = astCreate(AST_SYMBOL, $1, 0, 0, 0, 0); }
+    ;
+
 functions_definition
     : type_definition 'd' parameter_definition_list 'b' block { $$ = astCreate(AST_FUNC_DEC, 0, $1, $3, $5, 0); }
+    ;
+
+type_definition
+    : KW_INT TK_IDENTIFIER { $$ = astCreate(AST_INT_DEF, $2, 0, 0, 0, 0); }
+    | KW_FLOAT TK_IDENTIFIER { $$ = astCreate(AST_FLOAT_DEF, $2, 0, 0, 0, 0); }
+    | KW_CHAR TK_IDENTIFIER { $$ = astCreate(AST_CHAR_DEF, $2, 0, 0, 0, 0); }
+    ;
+
+parameter_definition_list
+    : parameter_definition_list ',' parameter_definition { $$ = astCreate(AST_PARAM_LIST, 0, $3, $1, 0, 0); }
+    | parameter_definition { $$ = astCreate(AST_PARAM_LIST, 0, $1, 0, 0, 0); }
+    | { $$ = 0; }
+    ;
+
+parameter_definition
+    : type_definition 'q' integer 'p' { $$ = astCreate(AST_VEC_PARAM, 0, $1, $3, 0, 0); }
+    | type_definition
+    ;
+
+block
+    : '{' command_list '}' { $$ = astCreate(AST_BLK, 0, $2, 0, 0, 0); }
     ;
 
 command_list
@@ -123,21 +150,6 @@ command
     | { $$ = 0; }
     ;
 
-block
-    : '{' command_list '}' { $$ = astCreate(AST_BLK, 0, $2, 0, 0, 0); }
-    ;
-
-parameter_definition_list
-    : parameter_definition_list ',' parameter_definition { $$ = astCreate(AST_PARAM_LIST, 0, $3, $1, 0, 0); }
-    | parameter_definition { $$ = astCreate(AST_PARAM_LIST, 0, $1, 0, 0, 0); }
-    | { $$ = 0; }
-    ;
-
-parameter_definition
-    : type_definition 'q' integer 'p' { $$ = astCreate(AST_VEC_PARAM, 0, $1, $3, 0, 0); }
-    | type_definition
-    ;
-
 parameter_list
     : parameter_list ',' expression { $$ = astCreate(AST_PARAM_LIST, 0, $3, $1, 0, 0); }
     | expression { $$ = astCreate(AST_PARAM_LIST, 0, $1, 0, 0, 0); }
@@ -153,18 +165,6 @@ print_parameter_list
 print_parameter
     : expression
     | LIT_STRING { $$ = astCreate(AST_SYMBOL, $1, 0, 0, 0, 0); }
-    ;
-
-type_definition
-    : KW_INT TK_IDENTIFIER { $$ = astCreate(AST_INT_DEF, $2, 0, 0, 0, 0); }
-    | KW_FLOAT TK_IDENTIFIER { $$ = astCreate(AST_FLOAT_DEF, $2, 0, 0, 0, 0); }
-    | KW_CHAR TK_IDENTIFIER { $$ = astCreate(AST_CHAR_DEF, $2, 0, 0, 0, 0); }
-    ;
-
-literal
-    : integer
-    | LIT_FLOAT { $$ = astCreate(AST_SYMBOL, $1, 0, 0, 0, 0); }
-    | LIT_CHAR { $$ = astCreate(AST_SYMBOL, $1, 0, 0, 0, 0); }
     ;
 
 integer
@@ -204,5 +204,5 @@ int yyerror(char *s)
 
 AST_NODE* getAST()
 {
-    return ast;
+    return root;
 }
