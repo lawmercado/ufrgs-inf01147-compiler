@@ -1,12 +1,13 @@
 # ufrgs-inf01147-compiler
-Compilers module final assignment. Currently in the second phase.
+Compilers module final assignment. Currently in the third phase.
 
 ## Running
 ```
 make
-./etapa2 inputfile
+./etapa3 inputfile outputfile
 ```
-Where 'inputfile' contains the text to be evaluated by the parser.
+Where 'inputfile' contains the text to be evaluated by the parser and to have its syntactical tree created.
+In the 'outputfile' will be generated a similar source code of the 'inputfile', which is generated based on the created syntactical tree.
 
 ## Cleaning
 ```
@@ -15,6 +16,20 @@ make clean
 
 ## Status
 According to the portuguese assignment definition.
+
+- [x] Corrijir a especificação das suas expressões em relação à etapa anterior,
+simplificando-as de forma que as produções utilizem a forma mais simples que é
+ambígua, e retirando a ambiguidade pela declaração da precedência correta dos
+operadores com as definições %left, %right ou %nonassoc;
+- [x] Implementar a estrutura da árvore de sintaxe, com funções de criação de nodo,
+impressão de um nodo e impressão da árvore;
+- [x] Colocar ações sintáticas ao lado das regras de produção descritas no arquivo para
+o yacc, as quais criam ou propagam os nodos da árvore, montando-a
+recursivamente segundo a análise. A maior parte das ações serão chamadas à
+rotina de criação de nodo;
+- [x] Finalmente, você deve implemetar uma rotina que percorre a árvore e gera um
+programa fonte bastate semelhante, funcionalmente equivalente ao programa
+analisado;
 
 ### Phase 2
 - [x] o programa principal deve chamar uma única vez a rotina yyparse para reconhecer
