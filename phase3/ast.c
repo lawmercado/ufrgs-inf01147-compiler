@@ -1,5 +1,4 @@
 #include "ast.h"
-#include "y.tab.h"
 
 AST_NODE* astCreate(int type, HASH_NODE *symbol, AST_NODE *son0, AST_NODE *son1, AST_NODE *son2, AST_NODE *son3)
 {
@@ -424,33 +423,5 @@ void astGenerateSource(AST_NODE *node, FILE *file)
         case AST_CHAR_DEF: fprintf(file, "char %s", node->symbol->text); break;
         case AST_SYMBOL: fprintf(file, "%s", node->symbol->text); break;
         default: fprintf(file, "OI"); break;
-    }
-}
-
-void astFind(int level, AST_NODE *node, char *text)
-{
-    int i = 0;
-
-    if(node == 0)
-    {
-        return;
-    }
-
-    if(node->type == AST_VAR_DEC)
-    {
-        if((strcmp(node->son[0]->symbol->text, text) == 0 && node->son[0]->symbol->type == SYMBOL_TK_IDENTIFIER))
-        {
-            hashSetType(text, TK_IDENTIFIER);
-        }
-    }
-
-    if(node->type == AST_FUNC_DEC || node->type == AST_VEC_DEC)
-    {
-        hashSetType(node->son[0]->symbol->text, TK_IDENTIFIER);
-    }
-
-    for(i = 0; i < MAX_SONS; i++)
-    {
-        astFind(level + 1, node->son[i], text);
     }
 }

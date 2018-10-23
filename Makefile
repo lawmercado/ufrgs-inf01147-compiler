@@ -8,7 +8,7 @@
 default:
 	lex scanner.l
 	yacc -d parser.y
-	gcc -o etapa3 main.c lex.yy.c y.tab.c hash.c ast.c
+	gcc -o etapa4 main.c lex.yy.c y.tab.c hash.c ast.c semantic.c
 
 clean:
-	rm -rf lex.yy.c y.tab.c y.tab.h etapa3
+	rm -rf lex.yy.c y.tab.c y.tab.h etapa4

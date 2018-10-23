@@ -43,15 +43,11 @@ enum AST_NODE_TYPE {
     AST_VEC_ATTRIB,
     AST_BLK,
     AST_DB,
-    AST_DATATYPE_INT,
-    AST_DATATYPE_FLOAT,
-    AST_DATATYPE_BOOL,
 };
 
 typedef struct ast_node
 {
     int type;
-    int datatype;
     struct ast_node *son[MAX_SONS];
     HASH_NODE *symbol;
 
@@ -62,7 +58,5 @@ AST_NODE* astCreate(int type, HASH_NODE *symbol, AST_NODE *son0, AST_NODE *son1,
 void astPrint(AST_NODE *node, int level);
 
 void astGenerateSource(AST_NODE *node, FILE *file);
-
-void astFind(int level, AST_NODE *node, char *text);
 
 #endif

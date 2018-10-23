@@ -16,18 +16,10 @@
 #define SYMBOL_LIT_CHAR 3
 #define SYMBOL_LIT_STRING 4
 #define SYMBOL_TK_IDENTIFIER 5
-#define SYMBOL_SCALAR 6
-#define SYMBOL_VECTOR 7
-#define SYMBOL_FUNCTION 8
-
-#define DATATYPE_INT 9
-#define DATATYPE_CHAR 10
-#define DATATYPE_FLOAT 11
 
 typedef struct hash_node
 {
     int type;
-    int datatype;
     char *text;
     struct hash_node *next;
 
@@ -42,9 +34,5 @@ HASH_NODE* hashInsert(int type, char *text);
 HASH_NODE* hashFind(char *text);
 
 void hashPrint(void);
-
-void hashSetType(char *text, int type);
-
-void hashCheckUndeclared();
 
 #endif

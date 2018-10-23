@@ -8,7 +8,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "ast.h"
-#include "semantic.h"
 
 extern FILE *yyin;
 
@@ -18,9 +17,6 @@ int yylex(void);
 int getLineNumber(void);
 void hashPrint(void);
 void astPrint(AST_NODE *ast, int level);
-void astGenerateSource(AST_NODE *node, FILE *file);
-void checkUndeclared();
-void setDeclaration(AST_NODE *node);
 AST_NODE* getAST(void);
 
 int main(int argc, char** argv)
@@ -63,10 +59,6 @@ int main(int argc, char** argv)
 
         fprintf(stderr, "\nAccepted source code!\n");
         fprintf(stderr, "\nThe generated source code is in the '%s' file.\n", argv[2]);
-
-        fprintf(stderr, "\nSemantic verification:\n");
-        checkUndeclared();
-        setDeclaration(getAST());
 
         exit(0);
     }

@@ -10,7 +10,6 @@
 #include <stdlib.h>
 #include "hash.h"
 #include "ast.h"
-#include "semantic.h"
 
 int yylex(void);
 int yyerror(char *);
