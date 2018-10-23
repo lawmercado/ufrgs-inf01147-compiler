@@ -430,7 +430,7 @@ void astGenerateSource(AST_NODE *node, FILE *file)
 void astFind(int level, AST_NODE *node, char *text)
 {
     int i = 0;
-
+    fprintf(stderr, "[astFind] Entrou astFind.\n");
     if(node == 0)
     {
         return;
@@ -444,13 +444,41 @@ void astFind(int level, AST_NODE *node, char *text)
         }
     }
 
-    if(node->type == AST_FUNC_DEC || node->type == AST_VEC_DEC)
+    if(node->type == AST_FUNC_DEC || node->type == AST_VEC_DEC || node->type == AST_ARG_LIST)
     {
+        fprintf(stderr, "[astFind] Entrou if AST_FUNC_DEC, AST_VEC_DEC, AST_ARG_LIST.\n");
+        fprintf(stderr, "[astFind] Entrou hashSetType.\n");
         hashSetType(node->son[0]->symbol->text, TK_IDENTIFIER);
+        fprintf(stderr, "[astFind] Saiu hashSetType.\n");
+
     }
 
     for(i = 0; i < MAX_SONS; i++)
     {
         astFind(level + 1, node->son[i], text);
+    }
+}
+
+AST_NODE *astNodeFinder(int level, AST_NODE *node, AST_NODE **son2, char *text, int *flagFound)
+{
+    int i = 0;
+
+    if(node->type == AST_FUNC_DEC && strcmp(node->son[0]->symbol->text, text) == 0)
+    {
+        *son2 = node;
+        *flagFound = 1;
+    }
+
+    if(*flagFound == 1)
+    {
+        return NULL;
+    }
+
+    for(i = 0; i < MAX_SONS; i++)
+    {
+        if(node->son[i])
+        {
+            astNodeFinder(level + 1, node->son[i], son2, text, flagFound);
+        }
     }
 }

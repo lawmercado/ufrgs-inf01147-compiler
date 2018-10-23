@@ -15,6 +15,7 @@ enum AST_NODE_TYPE {
     AST_VEC_DEC,
     AST_FUNC_DEC,
     AST_PARAM_LIST,
+    AST_ARG_LIST,
     AST_VEC_PARAM,
     AST_LIT_LIST,
     AST_CMD_LIST,
@@ -64,5 +65,7 @@ void astPrint(AST_NODE *node, int level);
 void astGenerateSource(AST_NODE *node, FILE *file);
 
 void astFind(int level, AST_NODE *node, char *text);
+
+AST_NODE *astNodeFinder(int level, AST_NODE *node, AST_NODE **son2, char *text, int *flagFound);
 
 #endif

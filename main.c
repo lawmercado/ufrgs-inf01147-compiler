@@ -64,9 +64,11 @@ int main(int argc, char** argv)
         fprintf(stderr, "\nAccepted source code!\n");
         fprintf(stderr, "\nThe generated source code is in the '%s' file.\n", argv[2]);
 
-        fprintf(stderr, "\nSemantic verification:\n");
+        fprintf(stderr, "\n***Semantic verification***\n");
         checkUndeclared();
+        fprintf(stderr, "SAIU checkUndeclared\n");
         setDeclaration(getAST());
+        fprintf(stderr, "\nSemantic verification OK!\n");
 
         exit(0);
     }

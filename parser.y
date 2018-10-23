@@ -98,7 +98,7 @@ varibales_definition
     ;
 
 literal_list
-    : literal_list literal { $$ = astCreate(AST_LIT_LIST, 0, $2, $1, 0, 0); }
+    : literal_list literal { $$ = astCreate(AST_LIT_LIST, 0, $1, $2, 0, 0); }
     | literal { $$ = astCreate(AST_LIT_LIST, 0, $1, 0, 0, 0); }
     ;
 
@@ -119,12 +119,12 @@ type_definition
     ;
 
 parameter_definition_list
-    : parameter_definition_list ',' parameter_definition { $$ = astCreate(AST_PARAM_LIST, 0, $3, $1, 0, 0); }
-    | parameter_definition { $$ = astCreate(AST_PARAM_LIST, 0, $1, 0, 0, 0); }
+    : parameter_definition_list ',' parameter_definition { $$ = astCreate(AST_ARG_LIST, 0, $3, $1, 0, 0); }
+    | parameter_definition { $$ = astCreate(AST_ARG_LIST, 0, $1, 0, 0, 0); }
     | { $$ = 0; }
     ;
 
-parameter_definition
+parameter_definition 
     : type_definition 'q' integer 'p' { $$ = astCreate(AST_VEC_PARAM, 0, $1, $3, 0, 0); }
     | type_definition
     ;

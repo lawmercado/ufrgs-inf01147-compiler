@@ -1,12 +1,41 @@
 int a = 0;
+int i = 0;
+int v q10p: 0 0 0 0 0 0 0 0 0 0;
+int mat q10p;
+float f = 10.55;
+char c = 'x';
 char x = 65;
-float x = 'h';
-int v q5p: 9.0 0 0 0 40;
 int main d  b
 {
-    a = h;
-    nico = fd  b;
-    i = 2 + 3;
-    kkk = 7 + 5;
-    nico = 20;
+    a = 7;
+    v qap = 90;
+    print v qap;
+    print "Digite um numero: \n";
+    read a;
+    while i < 10
+    {
+        i = incnd i, 1 b;
+        a = incnd a, 1 b;
+    };
+    print "Incrementado algumas vezes fica ", a, "\n";
+    if a == 5 then
+        print "Parou no meio\n";
+    if d a == 11 or a == 17 b then
+        print "Var a ficou 11 ou 17\n";
+    if d a == 10 b then
+    
+    else
+    ;
+;
+;
+;
+{
+;
+    };
+{
+    };
+}
+int incn d OI b
+{
+    return x + n;
 }
