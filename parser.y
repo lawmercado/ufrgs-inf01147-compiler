@@ -124,8 +124,8 @@ parameter_definition_list
     | { $$ = 0; }
     ;
 
-parameter_definition 
-    : type_definition 'q' integer 'p' { $$ = astCreate(AST_VEC_PARAM, 0, $1, $3, 0, 0); }
+parameter_definition
+    : type_definition 'q' integer 'p' { $$ = astCreate(AST_VEC, 0, $1, $3, 0, 0); }
     | type_definition
     ;
 

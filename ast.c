@@ -67,6 +67,7 @@ void astPrint(AST_NODE *node, int level)
         case AST_VEC_ATTRIB: fprintf(stderr, "AST_VEC_ATTRIB, "); break;
         case AST_BLK: fprintf(stderr, "AST_BLK, "); break;
         case AST_DB: fprintf(stderr, "AST_DB, "); break;
+        case AST_ARG_LIST: fprintf(stderr, "AST_ARG_LIST, "); break;
         default: fprintf(stderr, "AST_UNKNOWN, "); break;
     }
 
@@ -144,6 +145,20 @@ void astGenerateSource(AST_NODE *node, FILE *file)
             fprintf(file, ";\n");
 
             break;
+        }
+        case AST_ARG_LIST:
+        {
+    		if(node->son[1] != 0)
+    	    {
+    			if(node->son[1]->type == AST_ARG_LIST)
+    			{
+    		  		astGenerateSource(node->son[1], file);
+    		 	   	fprintf(file, ", ");
+    			}
+    	   	}
+            astGenerateSource(node->son[0], file);
+
+    		break;
         }
         case AST_FUNC_DEC:
         {
@@ -430,7 +445,7 @@ void astGenerateSource(AST_NODE *node, FILE *file)
 void astFind(int level, AST_NODE *node, char *text)
 {
     int i = 0;
-    fprintf(stderr, "[astFind] Entrou astFind.\n");
+    //fprintf(stderr, "[astFind] Entrou astFind.\n");
     if(node == 0)
     {
         return;
@@ -444,14 +459,31 @@ void astFind(int level, AST_NODE *node, char *text)
         }
     }
 
-    if(node->type == AST_FUNC_DEC || node->type == AST_VEC_DEC || node->type == AST_ARG_LIST)
+    if(node->type == AST_FUNC_DEC || node->type == AST_VEC_DEC)
     {
-        fprintf(stderr, "[astFind] Entrou if AST_FUNC_DEC, AST_VEC_DEC, AST_ARG_LIST.\n");
-        fprintf(stderr, "[astFind] Entrou hashSetType.\n");
+        //fprintf(stderr, "[astFind] Entrou if AST_FUNC_DEC, AST_VEC_DEC.\n");
+        //fprintf(stderr, "[astFind] Entrou hashSetType.\n");
         hashSetType(node->son[0]->symbol->text, TK_IDENTIFIER);
-        fprintf(stderr, "[astFind] Saiu hashSetType.\n");
+        //fprintf(stderr, "[astFind] Saiu hashSetType para fun_dec ou vec_dec.\n");
 
     }
+
+    if(node->type == AST_ARG_LIST)
+    {
+        //fprintf(stderr, "[astFind] Entrou if AST_ARG_LIST.\n");
+        if(node->son[0]->type == AST_VEC)
+        {
+            //fprintf(stderr, "[astFind] Entrou IF AST_ARG_LIST \n");
+            hashSetType(node->son[0]->son[0]->symbol->text, TK_IDENTIFIER);
+        }
+        else
+        {
+            //fprintf(stderr, "[astFind] Entrou ELSE AST_ARG_LIST \n");
+            //fprintf(stderr, "[astFind] FILHO DO AST_ARG_LIST %s\n", node->son[0]->symbol->text);
+            hashSetType(node->son[0]->symbol->text, TK_IDENTIFIER);
+        }
+    }
+    //fprintf(stderr, "[astFind] Saiu AST_ARG_LIST \n");
 
     for(i = 0; i < MAX_SONS; i++)
     {

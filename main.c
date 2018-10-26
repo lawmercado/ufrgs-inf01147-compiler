@@ -66,8 +66,12 @@ int main(int argc, char** argv)
 
         fprintf(stderr, "\n***Semantic verification***\n");
         checkUndeclared();
-        fprintf(stderr, "SAIU checkUndeclared\n");
         setDeclaration(getAST());
+        if(SemanticErrorFlag == 1)
+        {
+            fprintf(stderr, "Semantic error found!\n");
+            exit(4);
+        }
         fprintf(stderr, "\nSemantic verification OK!\n");
 
         exit(0);

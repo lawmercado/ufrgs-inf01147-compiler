@@ -106,39 +106,42 @@ void hashPrint(void)
 
 void hashSetType(char *text, int type)
 {
+    //fprintf(stderr, "[hashSetType] Entrou hashSetType.\n");
+
     HASH_NODE *newnode;
 
     newnode = hashFind(text);
     newnode->type = type;
+    //fprintf(stderr, "[hashSetType] Passou hashSetType.\n");
 }
 
 void hashCheckUndeclared(void)
 {
     HASH_NODE *node;
     int i = 0;
-    fprintf(stderr, "[checkUndeclared] Entrou.\n");
+    //fprintf(stderr, "[checkUndeclared] Entrou.\n");
     for(i = 0; i < HASH_SIZE; i++)
     {
-        fprintf(stderr, "[checkUndeclared] 1o for.\n");
+        //fprintf(stderr, "[checkUndeclared] 1o for.\n");
         for(node = Table[i]; node; node = node->next)
         {
-            fprintf(stderr, "[checkUndeclared] 2o for.\n");
+            //fprintf(stderr, "[checkUndeclared] 2o for.\n");
             astFind(0, getAST(), node->text);
-            fprintf(stderr, "[checkUndeclared] Saiu astFind.\n");
+            //fprintf(stderr, "[checkUndeclared] Saiu astFind.\n");
             if(node->type == SYMBOL_TK_IDENTIFIER)
             {
-                fprintf(stderr, "[checkUndeclared] If => Undeclared variable.\n");
+                //fprintf(stderr, "[checkUndeclared] If => Undeclared variable.\n");
                 fprintf(stderr, "Undeclared variable %s.\n", node->text);
                 exit(4);
             }
             else if(node->type == SYMBOL_LIT_CHAR || node->type == SYMBOL_LIT_FLOAT || node->type == SYMBOL_LIT_INTEGER)
             {
-                fprintf(stderr, "ENTREI ELSE hashCheckUndeclared\n");
+                //fprintf(stderr, "ENTREI ELSE hashCheckUndeclared\n");
                 switch (node->type)
                 {
-                    case SYMBOL_LIT_CHAR: node->datatype = DATATYPE_CHAR; fprintf(stderr, "CASE SYMBOL_LIT_CHAR\n"); break;
-                    case SYMBOL_LIT_INTEGER: node->datatype = DATATYPE_INT; break; fprintf(stderr, "CASE SYMBOL_LIT_CHAR\n"); break;
-                    case SYMBOL_LIT_FLOAT: node->datatype = DATATYPE_FLOAT; break; fprintf(stderr, "CASE SYMBOL_LIT_CHAR\n"); break;
+                    case SYMBOL_LIT_CHAR: node->datatype = DATATYPE_CHAR; /*fprintf(stderr, "CASE SYMBOL_LIT_CHAR\n");*/ break;
+                    case SYMBOL_LIT_INTEGER: node->datatype = DATATYPE_INT; /*fprintf(stderr, "CASE SYMBOL_LIT_INT\n");*/ break;
+                    case SYMBOL_LIT_FLOAT: node->datatype = DATATYPE_FLOAT; /*fprintf(stderr, "CASE SYMBOL_LIT_FLOAT\n");*/ break;
                 }
                 node->type = SYMBOL_SCALAR;
                 //fprintf(stderr, "SYMBOL SCALAR DECLARED PARA VARS = %d\n", node->type);

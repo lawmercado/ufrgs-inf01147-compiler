@@ -6,6 +6,8 @@
 #include "hash.h"
 #include "ast.h"
 
+extern int SemanticErrorFlag;
+
 void setDeclaration(AST_NODE *node);
 
 void checkUndeclared();
