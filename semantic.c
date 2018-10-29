@@ -45,8 +45,8 @@ void setDeclaration(AST_NODE *root)
 
         if(son0)
         {
-            //if(son1)
-            //{
+            if(son1) //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            {
                 //fprintf(stderr, "Node type: %d, Dec type %d.\n", node->type, son0->type);
                 switch(node->type)
                 {
@@ -289,25 +289,26 @@ void setDeclaration(AST_NODE *root)
                         int pCount = 0;
                         int argCount = 0;
 
-                        //if(son2);
-                        if(flagFound == 1)
+                        if(son2) //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
                         {
-                            if(son2->type == AST_FUNC_DEC)
+                            if(flagFound == 1)
                             {
-                                son2Aux = son2->son[1];
-
-                                for(son2 = son2Aux; son2; son2 = son2->son[1])
+                                if(son2->type == AST_FUNC_DEC)
                                 {
-                                    pCount++;
+                                    son2Aux = son2->son[1];
+
+                                    for(son2 = son2Aux; son2; son2 = son2->son[1])
+                                    {
+                                        pCount++;
+                                    }
                                 }
                             }
+                            else
+                            {
+                                fprintf(stderr, "Call invalid function '%s'", son0->symbol->text);
+                                SemanticErrorFlag = 1;
+                            }
                         }
-                        else
-                        {
-                            fprintf(stderr, "Call invalid function '%s'", son0->symbol->text);
-                            SemanticErrorFlag = 1;
-                        }
-
                         if(son1)
                         {
                             son1Aux = son1;
@@ -318,38 +319,55 @@ void setDeclaration(AST_NODE *root)
                             }
                         }
 
-                        son1 = son1Aux;
-                        son2 = son2Aux;
 
                         if(argCount != pCount)
                         {
                             fprintf(stderr, "Number of arguments in function call '%s' invalid.\n", son0->symbol->text);
                             SemanticErrorFlag = 1;
                         }
-                        else
+                        else if(son2)
                         {
+                            fprintf(stderr, "ENTRAR FOR\n");
                             int i = 0, j = 0;
+                            son1 = son1Aux;
+                            son2 = son2Aux;
+
                             for(i = 0; i < argCount; son1 = son1->son[1], i++)
                             {
                                 for(j = 0; j < argCount - i - 1; son2 = son2->son[1], j++);
-
-                                if(son2->son[0]->symbol->datatype != son1->son[0]->symbol->datatype)
+                                fprintf(stderr, "ENTROU FOR\n"); //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                                fprintf(stderr, "son1 %d son2 %d\n", son1->son[0]->symbol->datatype, son2->son[0]->symbol->datatype); //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                                if(son2->son[0]->type == AST_VEC)
                                 {
-                                    if(!((son2->son[0]->symbol->datatype == DATATYPE_CHAR || son2->son[0]->symbol->datatype == DATATYPE_INT) && (son1->son[0]->symbol->datatype == DATATYPE_CHAR || son1->son[0]->symbol->datatype == DATATYPE_INT)))
+                                    if(son2->son[0]->symbol->datatype != son1->son[0]->symbol->datatype)
+                                    {
+                                        fprintf(stderr, "ENTROU IF 1\n");
+                                        if(!((son2->son[0]->symbol->datatype == DATATYPE_CHAR || son2->son[0]->symbol->datatype == DATATYPE_INT) && (son1->son[0]->symbol->datatype == DATATYPE_CHAR || son1->son[0]->symbol->datatype == DATATYPE_INT)))
+                                        {
+                                            fprintf(stderr, "ENTROU IF 2\n");
+                                            fprintf(stderr, "Argument '%s' dont match with parameter '%s'.\n", son2->son[0]->symbol->text, son1->son[0]->symbol->text);
+                                            SemanticErrorFlag = 1;
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    if(son2->son[0]->symbol->datatype != son1->son[0]->symbol->datatype )
                                     {
                                         fprintf(stderr, "Argument '%s' dont match with parameter '%s'.\n", son2->son[0]->symbol->text, son1->son[0]->symbol->text);
                                         SemanticErrorFlag = 1;
                                     }
                                 }
-
+                                fprintf(stderr, "SAIU IF\n");
                                 son2 = son2Aux;
                             }
+                            fprintf(stderr, "SAIU FOR\n");
                         }
                         break;
                     }
                     default: break;
                 }
-            //}
+            }
         }
     }
     /*if(SemanticErrorFlag == 1)

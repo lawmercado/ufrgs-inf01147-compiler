@@ -8,6 +8,7 @@
 
 #include "hash.h"
 #include "ast.h"
+#include "semantic.h"
 #include "y.tab.h"
 
 HASH_NODE* Table[HASH_SIZE];
@@ -132,7 +133,9 @@ void hashCheckUndeclared(void)
             {
                 //fprintf(stderr, "[checkUndeclared] If => Undeclared variable.\n");
                 fprintf(stderr, "Undeclared variable %s.\n", node->text);
-                exit(4);
+                SemanticErrorFlag = 1;
+                break;
+                //exit(4);
             }
             else if(node->type == SYMBOL_LIT_CHAR || node->type == SYMBOL_LIT_FLOAT || node->type == SYMBOL_LIT_INTEGER)
             {

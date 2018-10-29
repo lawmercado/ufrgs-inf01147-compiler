@@ -1,18 +1,10 @@
 int a = 0;
-float i = 0.5;
+int i = 0;
 int v q10p: 40 0 0 0 0 0 0 0 0 0;
 int mat q10p;
 float f = 10.55;
 char c = 'x';
 char x = 65;
-int incn d int x, int vetor q5p, char oi b
-{
-    return x + oi;
-}
-int jooj d float x b
-{
-    return x + oi;
-}
 int main d  b
 {
     a = 7;
@@ -20,13 +12,13 @@ int main d  b
     v q5p = 50;
     print v qap;
     a = d 2 * 5 b / 5;
+    print "Digite um numero: \n";
     read a;
     while i < 10
     {
-        i = incnd 5, 1, 5, 6 b;
-        a = incnd 3, 3 b;
+        i = incnd i, 1, 5, 6 b;
+        a = incnd a, 1 b;
     };
-    a = incnd 3, 'c' b;
     print "Incrementado algumas vezes fica ", a, "\n";
     while i < 10
         i = incnd i, 1 b;
@@ -84,4 +76,20 @@ int main d  b
     };
 {
     };
+}
+int incn d int x, char oi b
+{
+    return x + n;
+}
+int incn d int x b
+{
+    return x + n;
+}
+int incn d int x, int n, int x2, int n2, int x3, int n3, int oi q5p b
+{
+    return x + n;
+}
+int incn d int x q80p, int x3, int oi q5p, int n3 b
+{
+    return x + n;
 }
