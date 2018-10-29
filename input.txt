@@ -1,91 +1,16 @@
 int a = 0;
-float i = 0.5;
-int v q10p: 0 0 0 0 0 0 0 0 0 40;
-int mat q10p;
-float f = 10.55;
-char c = 'x';
-char x = 65;
+int v q2p: 0 40;
 
-int incn d int x,  int vetor q5p, char oi b
-{
-  return x+oi;
+int f db{
+    a = 2;
 }
 
-int jooj d float x b
-{
-  return x+oi;
-}
 
-int main db {
-    a = 7;
-    v qap = 90;
-    v q5p = 50;
-    print vqap;
 
-    a = d2 * 5b / 5;
-    read a;
-    while i<10
-    {
-        i = incnd5,1,5,6b;
-        a = incn d 3, 3 b;
-    };
+int main dint ab {
+  a = 7;
+  v qap = 90;
+  v q5p = 50;
 
-    a = incn d 3, 'c' b;
-
-    print "Incrementado algumas vezes fica ",a,"\n";
-
-    while i<10
-        i = incndi,1b;
-
-    if a==5 then
-        print "Parou no meio\n";
-
-    if d a==11 or a== 17 b then
-        print "Var a ficou 11 ou 17\n";
-
-    if d a==11 or a== 17 b then {
-        print "Var a ficou 11 ou 17\n";
-    }
-    else
-    {
-        print "LLALALAL";
-    };
-
-    if d a==11 or a== 17 b then
-        print "Var a ficou 11 ou 17\n"
-    else
-    {
-        print "LLALALAL";
-        print "LALAL";
-    };
-
-    if d a==11 or a== 17 b then
-    {
-        if a==11 then {
-            print "oi";
-            print "oi";
-            print "oi";
-        };
-    }
-    else
-    {
-        print "LLALALAL";
-        print "LALAL";
-    };
-
-    if d a==11 or a== 17 b then
-    {
-        if a==11 then {
-            print "oi";
-            print "oi";
-            print "oi";
-        };
-    };
-
-    if da==10b then else ;
-    ;;;
-    {;};
-    {};
-
-    
+  return fdb;
 }

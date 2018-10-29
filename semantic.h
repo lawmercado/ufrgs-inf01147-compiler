@@ -16,5 +16,7 @@ void checkOperands(AST_NODE *node, int datatype);
 
 void checkDeclaration(AST_NODE *son0, AST_NODE *son1);
 
+void checkFuncCall(AST_NODE* node);
+
 
 #endif

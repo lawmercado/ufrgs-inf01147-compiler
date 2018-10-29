@@ -64,16 +64,17 @@ int main(int argc, char** argv)
         fprintf(stderr, "\nAccepted source code!\n");
         fprintf(stderr, "\nThe generated source code is in the '%s' file.\n", argv[2]);
 
-        fprintf(stderr, "\n***Semantic verification***\n");
+        fprintf(stderr, "\n*******Semantic verification*******\n");
         checkUndeclared();
         setDeclaration(getAST());
         if(SemanticErrorFlag == 1)
         {
             fprintf(stderr, "Semantic error found!\n");
+            fprintf(stderr, "\n***********************************\n");
             exit(4);
         }
         fprintf(stderr, "\nSemantic verification OK!\n");
-
+        fprintf(stderr, "\n***********************************\n");
         exit(0);
     }
     else
