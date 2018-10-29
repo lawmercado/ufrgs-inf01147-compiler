@@ -1,16 +1,99 @@
 int a = 0;
-int v q2p: 0 40;
+int i = 0;
+int v q10p: 0 0 0 0 0 0 0 0 0 40;
+int mat q10p;
+float f = 10.55;
+char c = 'x';
+char x = 65;
 
-int f db{
-    a = 2;
-}
-
-
-
-int main dint ab {
+int main db {
   a = 7;
   v qap = 90;
   v q5p = 50;
+  print vqap;
 
-  return fdb;
+  a = d2 * 5b / 5;
+
+  print "Digite um numero: \n";
+  read a;
+  while i<10
+    {
+    i = incndi,1,5,6b;
+    a = incnda,1b;
+    };
+
+  print "Incrementado algumas vezes fica ",a,"\n";
+
+  while i<10
+    i = incndi,1b;
+
+  if a==5 then
+    print "Parou no meio\n";
+
+  if d a==11 or a== 17 b then
+    print "Var a ficou 11 ou 17\n";
+
+  if d a==11 or a== 17 b then {
+    print "Var a ficou 11 ou 17\n";
+  }
+  else
+  {
+    print "LLALALAL";
+  };
+
+  if d a==11 or a== 17 b then
+    print "Var a ficou 11 ou 17\n"
+  else
+  {
+    print "LLALALAL";
+    print "LALAL";
+  };
+
+  if d a==11 or a== 17 b then
+  {
+    if a==11 then {
+      print "oi";
+      print "oi";
+      print "oi";
+    };
+  }
+  else
+  {
+    print "LLALALAL";
+    print "LALAL";
+  };
+
+  if d a==11 or a== 17 b then
+  {
+    if a==11 then {
+      print "oi";
+      print "oi";
+      print "oi";
+    };
+  };
+
+  if da==10b then else ;
+  ;;;
+  {;};
+  {};
+}
+
+int incn d int x, char oi b
+{
+  return x+n;
+}
+
+int incn d int x b
+{
+  return x+n;
+}
+
+int incn d int x, int n, int x2, int n2, int x3, int n3, int oiq5p b
+{
+  return x+n;
+}
+
+int incn d int xq80p, int x3, int oiq5p, int n3 b
+{
+  return x+n;
 }

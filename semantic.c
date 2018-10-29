@@ -46,7 +46,6 @@ void setDeclaration(AST_NODE *root)
 
         if(son0)
         {
-                //fprintf(stderr, "Node type: %d, Dec type %d.\n", node->type, son0->type);
                 switch(node->type)
                 {
                     case AST_DEC:
@@ -146,7 +145,6 @@ void setDeclaration(AST_NODE *root)
                             }
 
                         }
-
 
                         son2 = node->son[2];
 
@@ -340,18 +338,11 @@ void setDeclaration(AST_NODE *root)
 
                     case AST_VEC_ATTRIB:
                     {
-
-                        //fprintf(stderr, "son0->symbol->type = %d\n", son0->symbol->type);
                         if(son0->symbol->type == SYMBOL_SCALAR)
                         {
                             fprintf(stderr, "Cannot index a scalar variable (%s) ;\n", son0->symbol->text);
                             SemanticErrorFlag = 1;
                         }
-                        /*else if(son0->symbol->type == SYMBOL_FUNCTION)
-                        {
-                            fprintf(stderr, "Attributing vector to a function (%s) type;\n", son0->symbol->text);
-                            SemanticErrorFlag = 1;
-                        }*/
                         if(son1)
                         {
                             if(son1->type == AST_SYMBOL)
@@ -403,7 +394,6 @@ void setDeclaration(AST_NODE *root)
                                     fprintf(stderr, "Datatype dont match for attribution.\n");
                                     SemanticErrorFlag = 1;
                                 }
-                                fprintf(stderr, "Entrar checkFuncCall do AST_VEC_ATTRIB!\n");
                                 checkFuncCall(son2->son[0]);
                             }
                         }
@@ -464,7 +454,6 @@ void setDeclaration(AST_NODE *root)
                         }
                         else if(son2)
                         {
-                            //fprintf(stderr, "ENTRAR FOR\n");
                             int i = 0, j = 0;
                             son1 = son1Aux;
                             son2 = son2Aux;
@@ -472,16 +461,12 @@ void setDeclaration(AST_NODE *root)
                             for(i = 0; i < argCount; son1 = son1->son[1], i++)
                             {
                                 for(j = 0; j < argCount - i - 1; son2 = son2->son[1], j++);
-                                //fprintf(stderr, "ENTROU FOR\n"); //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                                //fprintf(stderr, "son1 %d son2 %d\n", son1->son[0]->symbol->datatype, son2->son[0]->symbol->datatype); //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
                                 if(son2->son[0]->type == AST_VEC)
                                 {
                                     if(son2->son[0]->symbol->datatype != son1->son[0]->symbol->datatype)
                                     {
-                                        //fprintf(stderr, "ENTROU IF 1\n");
                                         if(!((son2->son[0]->symbol->datatype == DATATYPE_CHAR || son2->son[0]->symbol->datatype == DATATYPE_INT) && (son1->son[0]->symbol->datatype == DATATYPE_CHAR || son1->son[0]->symbol->datatype == DATATYPE_INT)))
                                         {
-                                            //fprintf(stderr, "ENTROU IF 2\n");
                                             fprintf(stderr, "Argument '%s' dont match with parameter '%s'.\n", son2->son[0]->symbol->text, son1->son[0]->symbol->text);
                                             SemanticErrorFlag = 1;
                                         }
@@ -495,10 +480,8 @@ void setDeclaration(AST_NODE *root)
                                         SemanticErrorFlag = 1;
                                     }
                                 }
-                                //fprintf(stderr, "SAIU IF\n");
                                 son2 = son2Aux;
                             }
-                            //fprintf(stderr, "SAIU FOR\n");
                         }
                         break;
                     }
@@ -506,11 +489,6 @@ void setDeclaration(AST_NODE *root)
                 }
         }
     }
-    /*if(SemanticErrorFlag == 1)
-    {
-        fprintf(stderr, "Semantic Error!\n");
-        exit(4);
-    }*/
 }
 
 void checkUndeclared()
@@ -711,8 +689,6 @@ void checkFuncCall(AST_NODE* node)
 
                     }
                 }
-
-
                 son2 = son2Aux;
             }
         }
