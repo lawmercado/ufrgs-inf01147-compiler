@@ -50,6 +50,12 @@ void setDeclaration(AST_NODE *root)
                 //fprintf(stderr, "Node type: %d, Dec type %d.\n", node->type, son0->type);
                 switch(node->type)
                 {
+                    case AST_DEC:
+                    {
+                        setDeclaration(son0);
+                        break;
+                    }
+
                     case AST_VAR_DEC:
                     {
                         if(son0->symbol)
@@ -119,6 +125,20 @@ void setDeclaration(AST_NODE *root)
                                     case AST_INT_DEF: son0->symbol->datatype = DATATYPE_INT; break;
                                     case AST_FLOAT_DEF: son0->symbol->datatype = DATATYPE_FLOAT; break;
                                     case AST_CHAR_DEF: son0->symbol->datatype = DATATYPE_CHAR; break;
+                                    case AST_VEC:
+                                    {
+                                        if(node->son[0]->son[0]->type)
+                                        {
+                                            switch(node->son[0]->son[0]->type)
+                                            {
+                                                case AST_INT_DEF: node->son[0]->son[0]->symbol->datatype = DATATYPE_INT; node->son[0]->son[0]->symbol->type = SYMBOL_VECTOR; break;
+                                                case AST_FLOAT_DEF: node->son[0]->son[0]->symbol->datatype = DATATYPE_FLOAT; node->son[0]->son[0]->symbol->type = SYMBOL_VECTOR; break;
+                                                case AST_CHAR_DEF: node->son[0]->son[0]->symbol->datatype = DATATYPE_CHAR; node->son[0]->son[0]->symbol->type = SYMBOL_VECTOR; break;
+                                            }
+
+                                        }
+                                        break;
+                                    }
                                 }
                             }
 
@@ -179,6 +199,18 @@ void setDeclaration(AST_NODE *root)
                             son0->symbol->datatype = DATATYPE_FLOAT;
                         }
 
+                        if(node->son[1])
+                        {
+                            if(node->son[1]->type == AST_SYMBOL)
+                            {
+                                if(node->son[1]->symbol->datatype != DATATYPE_CHAR && node->son[1]->symbol->datatype != DATATYPE_INT)
+                                {
+                                    fprintf(stderr, "Index must be INTEGER.\n");
+                                    SemanticErrorFlag = 1;
+                                }
+                            }
+                        }
+
                         if(node->son[2])
                         {
                             son2 = node->son[2];
@@ -237,11 +269,38 @@ void setDeclaration(AST_NODE *root)
                                     fprintf(stderr, "Cannot use function without parameters (%s);\n", son1->symbol->text);
                                     SemanticErrorFlag = 1;
                                 }
+                                else if(son1->symbol->type == SYMBOL_SCALAR)
+                                {
+                                    if(son1->symbol->datatype != son0->symbol->datatype)
+                                    {
+                                        if(son0->symbol->datatype == 1)
+                                            fprintf(stderr, "Expecting an integer datatype.\n");
+                                        else if(son0->symbol->datatype == 3)
+                                            fprintf(stderr, "Expecting an float datatype.\n");
+
+                                        SemanticErrorFlag = 1;
+                                    }
+                                }
                             }
-                            else if(son1->type == AST_LESS || son1->type == AST_GREATER || son1->type == AST_LEQUAL || son1->type == AST_GEQUAL || son1->type == AST_EQUAL || son1->type == AST_OR || son1->type == AST_AND || son1->type == AST_NOT || son1->type == AST_ADD || son1->type == AST_SUB || son1->type == AST_MUL || son1->type == AST_DIV)
+                            else if(son1->type == AST_ADD || son1->type == AST_SUB || son1->type == AST_MUL || son1->type == AST_DIV)
                             {
                                 checkOperands(son1, son0->symbol->datatype);
                             }
+                            else if(son1->type == AST_LESS || son1->type == AST_GREATER || son1->type == AST_LEQUAL || son1->type == AST_GEQUAL || son1->type == AST_EQUAL || son1->type == AST_OR || son1->type == AST_AND || son1->type == AST_NOT)
+                            {
+                                fprintf(stderr, "Cannot attribute a bool to a variable.\n");
+                                SemanticErrorFlag = 1;
+                            }
+                            else if(son1->type == AST_FUNC_CALL)
+                            {
+                                if(son1->son[0]->symbol->datatype != son0->symbol->datatype)
+                                {
+                                    fprintf(stderr, "Datatype dont match for attribution.\n");
+                                    SemanticErrorFlag = 1;
+                                }
+                                //checkFuncall
+                            }
+
                         }
                         break;
                     }
@@ -259,20 +318,60 @@ void setDeclaration(AST_NODE *root)
                             fprintf(stderr, "Attributing vector to a function (%s) type;\n", son0->symbol->text);
                             SemanticErrorFlag = 1;
                         }
-                        else if(node->son[2]->type == AST_SYMBOL)
+                    if(son1)
+                    {
+                        if(son1->type == AST_SYMBOL)
                         {
-                            if(node->son[2]->symbol->type == SYMBOL_FUNCTION)
+                            if(son1->symbol->datatype != DATATYPE_CHAR && son1->symbol->datatype != DATATYPE_INT)
                             {
-                                fprintf(stderr, "Cannot use function without parameters (%s);\n", node->son[2]->symbol->text);
+                                fprintf(stderr, "Index must be integer.\n");
                                 SemanticErrorFlag = 1;
                             }
                         }
-                        else if(node->son[2]->type == AST_LESS || node->son[2]->type == AST_GREATER || node->son[2]->type == AST_LEQUAL || node->son[2]->type == AST_GEQUAL || node->son[2]->type == AST_EQUAL || node->son[2]->type == AST_OR || node->son[2]->type == AST_AND || node->son[2]->type == AST_NOT || node->son[2]->type == AST_ADD || node->son[2]->type == AST_SUB || node->son[2]->type == AST_MUL || node->son[2]->type == AST_DIV)
-                        {
-                            checkOperands(node->son[2], son0->symbol->datatype);
-                        }
+                    }
 
-                        break;
+                    if(son2)
+                    {
+                        if(son2->type == AST_SYMBOL)
+                        {
+                            if(son2->symbol->type == SYMBOL_FUNCTION)
+                            {
+                                fprintf(stderr, "Cannot use function without parameters (%s);\n", son2->symbol->text);
+                                SemanticErrorFlag = 1;
+                            }
+                            else if(son2->symbol->type == SYMBOL_SCALAR)
+                            {
+                                if(son2->symbol->datatype != son0->symbol->datatype)
+                                {
+                                    if(son0->symbol->datatype == DATATYPE_INT)
+                                        fprintf(stderr, "Expecting an integer datatype.\n");
+                                    else if(son0->symbol->datatype == DATATYPE_FLOAT)
+                                        fprintf(stderr, "Expecting an float datatype.\n");
+
+                                    SemanticErrorFlag = 1;
+                                }
+                            }
+                        }
+                        else if(son2->type == AST_ADD || son2->type == AST_SUB || son2->type == AST_MUL || son2->type == AST_DIV)
+                            checkOperands(son2, son0->symbol->datatype);
+                        else if(son2->type == AST_LESS || son2->type == AST_GREATER || son2->type == AST_LEQUAL || son2->type == AST_GEQUAL || son2->type == AST_EQUAL || son2->type == AST_OR || son2->type == AST_AND || son2->type == AST_NOT)
+                        {
+                            fprintf(stderr, "Cannot attribute bool to a variable.\n");
+                            SemanticErrorFlag = 1;
+                        }
+                        else if(son2->type == AST_FUNC_CALL)
+                        {
+                            if(son2->son[0]->symbol->datatype != son0->symbol->datatype)
+                            {
+                                fprintf(stderr, "Datatype dont match for attribution.\n");
+                                SemanticErrorFlag = 1;
+                            }
+                            //checkFuncall(son2->son[0]);
+                        }
+                    }
+
+                    break;
+
                     }
 
                     case AST_FUNC_CALL:
@@ -327,7 +426,7 @@ void setDeclaration(AST_NODE *root)
                         }
                         else if(son2)
                         {
-                            fprintf(stderr, "ENTRAR FOR\n");
+                            //fprintf(stderr, "ENTRAR FOR\n");
                             int i = 0, j = 0;
                             son1 = son1Aux;
                             son2 = son2Aux;
@@ -335,16 +434,16 @@ void setDeclaration(AST_NODE *root)
                             for(i = 0; i < argCount; son1 = son1->son[1], i++)
                             {
                                 for(j = 0; j < argCount - i - 1; son2 = son2->son[1], j++);
-                                fprintf(stderr, "ENTROU FOR\n"); //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                                fprintf(stderr, "son1 %d son2 %d\n", son1->son[0]->symbol->datatype, son2->son[0]->symbol->datatype); //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                                //fprintf(stderr, "ENTROU FOR\n"); //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                                //fprintf(stderr, "son1 %d son2 %d\n", son1->son[0]->symbol->datatype, son2->son[0]->symbol->datatype); //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
                                 if(son2->son[0]->type == AST_VEC)
                                 {
                                     if(son2->son[0]->symbol->datatype != son1->son[0]->symbol->datatype)
                                     {
-                                        fprintf(stderr, "ENTROU IF 1\n");
+                                        //fprintf(stderr, "ENTROU IF 1\n");
                                         if(!((son2->son[0]->symbol->datatype == DATATYPE_CHAR || son2->son[0]->symbol->datatype == DATATYPE_INT) && (son1->son[0]->symbol->datatype == DATATYPE_CHAR || son1->son[0]->symbol->datatype == DATATYPE_INT)))
                                         {
-                                            fprintf(stderr, "ENTROU IF 2\n");
+                                            //fprintf(stderr, "ENTROU IF 2\n");
                                             fprintf(stderr, "Argument '%s' dont match with parameter '%s'.\n", son2->son[0]->symbol->text, son1->son[0]->symbol->text);
                                             SemanticErrorFlag = 1;
                                         }
@@ -358,10 +457,10 @@ void setDeclaration(AST_NODE *root)
                                         SemanticErrorFlag = 1;
                                     }
                                 }
-                                fprintf(stderr, "SAIU IF\n");
+                                //fprintf(stderr, "SAIU IF\n");
                                 son2 = son2Aux;
                             }
-                            fprintf(stderr, "SAIU FOR\n");
+                            //fprintf(stderr, "SAIU FOR\n");
                         }
                         break;
                     }
@@ -386,7 +485,7 @@ void checkOperands(AST_NODE *node, int datatype)
 {
     int i = 0;
 
-    if(node == 0)
+    if(!node)
     {
         return;
     }
@@ -417,30 +516,53 @@ void checkOperands(AST_NODE *node, int datatype)
             break;
         }
         case AST_DB:
+        {
+            node->datatype = node->son[0]->datatype;
+
+            if(node->son[0]->symbol)
+            {
+                if(node->son[0]->symbol->datatype == DATATYPE_INT || node->son[0]->symbol->datatype == DATATYPE_CHAR)
+                    node->datatype = AST_DATATYPE_INT;
+                else
+                    node->datatype = AST_DATATYPE_FLOAT;
+            }
+            break;
+        }
         case AST_FUNC_CALL:
+        {
             node->datatype = node->son[0]->datatype;
             break;
-
+        }
         case AST_ADD:
         case AST_MUL:
         case AST_DIV:
         case AST_SUB:
             if(node->son[0]->datatype == AST_DATATYPE_BOOL || node->son[1]->datatype == AST_DATATYPE_BOOL )
-                {
-                    fprintf(stderr, "Cannot use boolean in arithmetic expression.\n");
-                    SemanticErrorFlag = 1;
-                }
-                else if(node->son[0]->datatype != node->son[1]->datatype)
-                {
-                    fprintf(stderr, "Arithmetic operation cannot mix float and int.\n");
-                    SemanticErrorFlag = 1;
-                }
-                else
-                {
-                    node->datatype = node->son[0]->datatype;
-                }
-                break;
+            {
+                fprintf(stderr, "Cannot use boolean in arithmetic expression.\n");
+                SemanticErrorFlag = 1;
+            }
+            else if(node->son[0]->datatype != node->son[1]->datatype)
+            {
+                fprintf(stderr, "Arithmetic operation cannot mix float and int.\n");
+                SemanticErrorFlag = 1;
+            }
+            else
+            {
+                node->datatype = node->son[0]->datatype;
+            }
+            break;
+        case AST_NOT:
+        {
+            if(node->son[0]->datatype != AST_DATATYPE_BOOL)
+            {
+                fprintf(stderr, "Only boolean allowed when using NOT.\n");
+                SemanticErrorFlag = 1;
+            }
 
+            node->datatype = AST_DATATYPE_BOOL;
+            break;
+        }
         case AST_ATTRIB:
                 break;
         case AST_LESS:
@@ -450,6 +572,7 @@ void checkOperands(AST_NODE *node, int datatype)
         case AST_EQUAL:
         case AST_OR:
         case AST_AND:
+        {
             if(node->son[0]->datatype != node->son[1]->datatype)
             {
                 fprintf(stderr, "Cannot mix different datatypes in boolean expression.\n");
@@ -459,6 +582,7 @@ void checkOperands(AST_NODE *node, int datatype)
             node->datatype = AST_DATATYPE_BOOL;
 
             break;
+        }
     }
 }
 
