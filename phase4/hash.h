@@ -47,8 +47,4 @@ void hashSetType(char *text, int type);
 
 void hashCheckUndeclared();
 
-HASH_NODE *makeTemp();
-
-HASH_NODE *makeLabel();
-
 #endif

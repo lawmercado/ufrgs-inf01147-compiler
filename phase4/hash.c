@@ -152,19 +152,3 @@ void hashCheckUndeclared(void)
         }
     }
 }
-
-HASH_NODE *makeTemp()
-{
-    static int serial = 0;
-    static char name[100];
-    sprintf(name, "NOSssssOTEmpP%d", serial++);
-    return hashInsert(SYMBOL_SCALAR, name);
-}
-
-HASH_NODE *makeLabel()
-{
-    static int serial = 0;
-    static char name[100];
-    sprintf(name, "Label%d", serial++);
-    return hashInsert(SYMBOL_LABEL, name);
-}
