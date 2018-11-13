@@ -1,0 +1,16 @@
+int a = 0;
+int xq5p;
+
+int ffdint c, int ccb{
+  return 2;
+}
+
+int main db {
+  a = 7 + 3;
+
+  a = ffd2, 5b;
+
+  
+
+}
+

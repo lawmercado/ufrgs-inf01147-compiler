@@ -157,7 +157,7 @@ HASH_NODE *makeTemp()
 {
     static int serial = 0;
     static char name[100];
-    sprintf(name, "NOSssssOTEmpP%d", serial++);
+    sprintf(name, "__TEmpP%d", serial++);
     return hashInsert(SYMBOL_SCALAR, name);
 }
 

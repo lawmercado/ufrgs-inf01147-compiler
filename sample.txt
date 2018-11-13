@@ -1,24 +1,28 @@
 int a = 0;
-float i = 0.3;
-int v q10p: 0 0 0 0 0 0 0 0 4 40;
-int mat q10p;
-float f = 10.55;
-char c = 'x';
-char x = 65;
-
-int incn d char x, int c b
-{
-  return x+x;
-}
+int c = 0;
+int i = 0;
+int x = 0;
+char oi = 'a';
+int v q10p: 0 0 0 0 0 0 0 0 0 40;
 
 int main db {
-  a = 7;
-  a = d2 * 5b / 5;
+ a = 7 + 5 + 3;
+ c = 8 / 2;
+ v q5p = 50;
+ 
+ if a==5 then
+    print "Parou no meio\n";
 
-  while i+10
-    {
-    i = incnd 'c', 2b;
-    };
+while i<10
+    i = 9; 
 
+if d a==11 or a== 17 b then
+    print "Var a ficou 11 ou 17\n"
+  else
+  {
+    print "LLALALAL";
+    print "LALAL";
+  };
 
 }
+

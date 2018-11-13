@@ -125,7 +125,7 @@ void setDeclaration(AST_NODE *root)
                                     {
                                         case AST_INT_DEF: son0->symbol->datatype = DATATYPE_INT; break;
                                         case AST_FLOAT_DEF: son0->symbol->datatype = DATATYPE_FLOAT; break;
-                                        case AST_CHAR_DEF: son0->symbol->datatype = DATATYPE_CHAR; break;
+                                        case AST_CHAR_DEF: son0->symbol->datatype = DATATYPE_INT; break;
                                         case AST_VEC:
                                         {
                                             {
@@ -133,7 +133,7 @@ void setDeclaration(AST_NODE *root)
                                                 {
                                                     case AST_INT_DEF: son0->son[0]->symbol->datatype = DATATYPE_INT; son0->son[0]->symbol->type = SYMBOL_VECTOR; break;
                                                     case AST_FLOAT_DEF: son0->son[0]->symbol->datatype = DATATYPE_FLOAT; son0->son[0]->symbol->type = SYMBOL_VECTOR; break;
-                                                    case AST_CHAR_DEF: son0->son[0]->symbol->datatype = DATATYPE_CHAR; son0->son[0]->symbol->type = SYMBOL_VECTOR; break;
+                                                    case AST_CHAR_DEF: son0->son[0]->symbol->datatype = DATATYPE_INT; son0->son[0]->symbol->type = SYMBOL_VECTOR; break;
                                                 }
 
                                             }

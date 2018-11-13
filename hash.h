@@ -19,6 +19,7 @@
 #define SYMBOL_SCALAR 6
 #define SYMBOL_VECTOR 7
 #define SYMBOL_FUNCTION 8
+#define SYMBOL_LABEL 9
 
 #define DATATYPE_INT 9
 #define DATATYPE_CHAR 10
