@@ -24,14 +24,13 @@ void tacPrintSingle(TAC *tac)
     }
 
     //Nao printar symbols
-    if(tac->type == TAC_SYMBOL)
+    if(tac->type == TAC_SYMBOL || tac->type == TAC_BUFFER)
     {
         return;
     }
     fprintf(stderr, "TAC(");
     switch(tac->type)
     {
-        case TAC_BUFFER : fprintf(stderr, "TAC_BUFFER"); break;
         case TAC_ADD : fprintf(stderr, "TAC_ADD"); break;
         case TAC_SUB : fprintf(stderr, "TAC_SUB"); break;
         case TAC_MUL : fprintf(stderr, "TAC_MUL"); break;
@@ -62,8 +61,6 @@ void tacPrintSingle(TAC *tac)
         case TAC_VEC_READ : fprintf(stderr, "TAC_VEC_READ"); break;
         case TAC_BEGIN_FUNCTION : fprintf(stderr, "TAC_BEGIN_FUNCTION"); break;
         case TAC_END_FUNCTION : fprintf(stderr, "TAC_END_FUNCTION"); break;
-        case TAC_BEGIN_BLK : fprintf(stderr, "TAC_BEGIN_BLK"); break;
-        case TAC_END_BLK : fprintf(stderr, "TAC_END_BLK"); break;
         default : fprintf(stderr, "TAC_UNKNOWN"); break;
     }
 
@@ -141,6 +138,9 @@ TAC *tacGenerate(AST_NODE *node)
 
     switch (node->type)
     {
+        case AST_INT_DEF:
+        case AST_FLOAT_DEF:
+        case AST_CHAR_DEF:
         case AST_SYMBOL : return tacCreate(TAC_SYMBOL, node->symbol,0,0); break;
         case AST_ADD : return makeBinOp(TAC_ADD, result[0], result[1]); break;
         case AST_SUB : return makeBinOp(TAC_SUB, result[0], result[1]); break;
@@ -159,20 +159,12 @@ TAC *tacGenerate(AST_NODE *node)
         case AST_IFELSE : return makeIfElse(result[0], result[1], result[2]); break;
         case AST_RETURN : return makeBinOp(TAC_RETURN, result[0], result[1]); break;
         case AST_WHILE : return makeWhile(result[0], result[1]); break;
-        case AST_PRINT : return tacJoin(tacCreate(TAC_PRINT, node->symbol, 0, 0), result[1]); break;
-        case AST_FUNC_CALL :
-        {
-            TAC *tacBuffer = tacCreate(TAC_BUFFER, result[0]->res, 0, 0);
-            tacBuffer->res = makeTemp();
-            return tacJoin(tacJoin(result[1], tacJoin(result[0], tacCreate(TAC_FUNC_CALL, tacBuffer->res, result[0]->res, 0))), tacBuffer); break;
-        }
-        case AST_FUNC_DEC : return makeFunc(tacCreate(TAC_SYMBOL, node->son[0]->symbol, 0, 0), result[1], result[2], result[0]); break;
-        case AST_BLK : return makeBlk(tacCreate(TAC_SYMBOL, node->son[0]->symbol, 0, 0), result[1], result[2], result[0]); break;
-        case AST_ARG_LIST : return tacJoin(result[0], tacCreate(TAC_ARG_LIST, node->son[0]->symbol, 0, 0)); break;
-        case AST_PARAM_LIST : return tacJoin(tacCreate(TAC_PARAM_LIST, result[0] ? result[0]->res : 0, 0, 0), result[1]); break;
-        case AST_VEC_ATTRIB : return tacJoin(tacJoin(result[0], result[1]), tacCreate(TAC_VEC_WRITE, result[0] ? result[0]->res : 0, result[0] ? result[0]->res : 0, result[1] ? result[1]->res : 0)); break;
+        case AST_PRINT : return makePrint(node, result[0], result[1]); break;
+        case AST_FUNC_CALL : return makeFuncCall(node, result[0], result[1]); break;
+        case AST_FUNC_DEC : return makeFuncDec(node, result[0], result[1], result[2]); break;
+        case AST_VEC_ATTRIB : return tacJoin(tacJoin(result[0], result[1]), tacCreate(TAC_VEC_WRITE, result[0] ? result[0]->res : 0, result[1] ? result[1]->res : 0, result[2] ? result[2]->res : 0)); break;
         case AST_VEC : return tacCreate(TAC_VEC_READ, makeTemp(), result[0]->res, result[1]->res); break;
-        case AST_ATTRIB : return tacJoin(tacJoin(result[0], result[1]), tacCreate(TAC_ATTRIB, result[0] ? result[0]->res : 0, result[0] ? result[0]->res : 0, result[1] ? result[1]->res : 0)); break;
+        case AST_ATTRIB : return tacJoin(tacJoin(result[0], result[1]), tacCreate(TAC_ATTRIB, result[0] ? result[0]->res : 0, 0, result[1] ? result[1]->res : 0)); break;
         default : return tacJoin(tacJoin(tacJoin(result[0], result[1]), result[2]), result[3]); break;
     }
     return 0;
@@ -238,13 +230,101 @@ TAC *makeWhile(TAC *result0, TAC*result1)
     return  tacJoin(tacJoin(tacJoin(tacJoin(tacJoin(labelWhileTac, result0), whileTac), result1), jumpTac), jumpLabelTac);
 }
 
-TAC* makeBlk(TAC *result0, TAC *result1, TAC* result2, TAC *codeParams)
+TAC* makePrint(AST_NODE* node, TAC* result0, TAC* result1)
 {
-    return tacJoin(tacJoin(tacJoin(tacJoin(tacCreate(TAC_BEGIN_BLK, result0->res, 0, 0), codeParams), result1), result2 ), tacCreate(TAC_END_BLK, result0->res, 0, 0));
+    int count = 1;
+    char countStr[2];
+
+    TAC *printTac = 0;
+    TAC *secondTac = 0;
+
+    node = node->son[0];
+
+    sprintf(countStr, "%d", count);
+    HASH_NODE *countNode = hashInsert(SYMBOL_SCALAR, countStr);
+
+    printTac = tacCreate(TAC_PRINT, node->son[0]->symbol, 0, countNode);
+    printTac = tacJoin(result0, printTac);
+
+    while(node->son[1])
+    {
+        count++;
+        sprintf(countStr, "%d", count);
+
+        HASH_NODE *countNode = hashInsert(SYMBOL_SCALAR, countStr);
+
+        node = node->son[1];
+        secondTac = tacCreate(TAC_PRINT, node->son[0]->symbol, 0, countNode);
+        secondTac = tacJoin(secondTac, printTac);
+    }
+
+    return tacJoin(secondTac, result1);
 }
 
-TAC *makeFunc(TAC *result0, TAC *result1, TAC* result2, TAC *codeParams)
+TAC *makeFuncCall(AST_NODE *node, TAC *result0, TAC *result1)
 {
-    return tacJoin(tacJoin(tacJoin(tacJoin(tacCreate(TAC_BEGIN_FUNCTION, result0->res, 0, 0), codeParams), result1), result2 ), tacCreate(TAC_END_FUNCTION, result0->res, 0, 0));
+    int count = 0;
+    char countStr[2];
+
+    TAC *resultParam;
+    TAC *bufferTac = 0;
+    TAC *funcCallTac = 0;
+    TAC *firstJoin = 0;
+    TAC *paramTac = 0;
+
+    bufferTac = tacCreate(TAC_BUFFER, result0 ? result0->res : 0, 0, 0);
+    bufferTac->res = makeTemp();
+
+    funcCallTac = tacCreate(TAC_FUNC_CALL, bufferTac ? bufferTac->res : 0, result0 ? result0->res : 0, 0);
+
+    firstJoin = tacJoin(tacJoin(result0, funcCallTac), result1);
+
+    while(node->son[1])
+    {
+        count++;
+        sprintf(countStr, "%d", count);
+
+        HASH_NODE *countNode = hashInsert(SYMBOL_SCALAR, countStr);
+
+        node = node->son[1];
+
+        resultParam = tacGenerate(node->son[0]);
+        paramTac = tacCreate(TAC_ARG_LIST, resultParam ? resultParam->res : 0, result0 ? result0->res : 0, countNode);
+        tacJoin(paramTac, firstJoin);
+    }
+
+    return firstJoin;
+}
+
+TAC *makeFuncDec(AST_NODE *node, TAC *result0, TAC *result1, TAC *result2)
+{
+    int count = 0;
+    char countStr[2];
+
+    TAC* beginTac = 0;
+    TAC* endTac = 0;
+    TAC* firstJoin = 0;
+    TAC* paramTac = 0;
+    TAC* resultParam = 0;
+
+    beginTac = tacCreate(TAC_BEGIN_FUNCTION, result0 ? result0->res : 0, 0,  0);
+    endTac = tacCreate(TAC_END_FUNCTION, result0 ? result0->res : 0, 0, 0);
+
+    firstJoin = tacJoin(tacJoin(tacJoin(beginTac, result1), result2 ), endTac);
+
+    while(node->son[1])
+    {
+        count++;
+        node = node->son[1];
+
+        sprintf(countStr, "%d", count);
+        HASH_NODE* countNode = hashInsert(SYMBOL_SCALAR, countStr);
+
+        resultParam = tacGenerate(node->son[0]);
+        paramTac = tacCreate(TAC_PARAM_LIST, resultParam ? resultParam->res : 0, result0 ? result0->res : 0, countNode);
+        tacJoin(paramTac, firstJoin);
+    }
+
+    return firstJoin;
 }
 //END OF FILE

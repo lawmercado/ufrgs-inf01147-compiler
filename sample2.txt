@@ -6,11 +6,12 @@ int ffdint c, int ccb{
 }
 
 int main db {
-  a = 7 + 3;
 
   a = ffd2, 5b;
+  xq2p = 3;
+  a = xq2p;
 
+  print "Incrementado algumas vezes fica ",a,"b", c;
   
 
 }
-

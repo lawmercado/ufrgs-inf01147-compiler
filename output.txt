@@ -6,6 +6,8 @@ int ff d int c, int cc b
 }
 int main d  b
 {
-    a = 7 + 3;
     a = ffd 2, 5 b;
+    x q2p = 3;
+    a = x q2p;
+    print "Incrementado algumas vezes fica ", a, "b", c;
 }
