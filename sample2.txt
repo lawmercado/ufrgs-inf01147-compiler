@@ -8,10 +8,11 @@ int ffdint c, int ccb{
 int main db {
 
   a = ffd2, 5b;
-  xq2p = 3;
+  a = a + 2;
+  xqap = 3;
   a = xq2p;
 
-  print "Incrementado algumas vezes fica ",a,"b", c;
-  
+  print "Incrementado algumas vezes fica ",a,"b", 2*2, xq2p;
+
 
 }
