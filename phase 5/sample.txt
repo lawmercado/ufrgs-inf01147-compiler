@@ -1,0 +1,28 @@
+int a = 0;
+int c = 0;
+int i = 0;
+int x = 0;
+char oi = 'a';
+int v q10p: 0 0 0 0 0 0 0 0 0 40;
+
+int main db {
+ a = 7 + 5 + 3;
+ c = 8 / 2;
+ v q5p = 50;
+ 
+ if a==5 then
+    print "Parou no meio\n";
+
+while i<10
+    i = 9; 
+
+if d a==11 or a== 17 b then
+    print "Var a ficou 11 ou 17\n"
+  else
+  {
+    print "LLALALAL";
+    print "LALAL";
+  };
+
+}
+

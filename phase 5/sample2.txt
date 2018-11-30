@@ -1,0 +1,18 @@
+int a = 0;
+int xq5p;
+
+int ffdint c, int ccb{
+  return 2;
+}
+
+int main db {
+
+  a = ffd2, 5b;
+  a = a + 2;
+  xqap = 3;
+  a = xq2p;
+
+  print "Incrementado algumas vezes fica ",a,"b", 2*2, xq2p;
+
+
+}

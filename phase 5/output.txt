@@ -1,0 +1,14 @@
+int a = 0;
+int x q5p;
+int ff d int c, int cc b
+{
+    return 2;
+}
+int main d  b
+{
+    a = ffd 2, 5 b;
+    a = a + 2;
+    x qap = 3;
+    a = x q2p;
+    print "Incrementado algumas vezes fica ", a, "b", 2 * 2, x q2p;
+}
