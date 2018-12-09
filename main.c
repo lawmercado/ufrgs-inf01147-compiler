@@ -10,6 +10,7 @@
 #include "ast.h"
 #include "semantic.h"
 #include "tacs.h"
+#include "genco.h"
 
 extern FILE *yyin;
 
@@ -24,10 +25,12 @@ void checkUndeclared();
 void setDeclaration(AST_NODE *node);
 AST_NODE* getAST(void);
 
+
 int main(int argc, char** argv)
 {
     FILE *outputFile;
     int result;
+    TAC *sendedTac;
 
     if(argc < 3)
     {
@@ -65,23 +68,29 @@ int main(int argc, char** argv)
         fprintf(stderr, "\nAccepted source code!\n");
         fprintf(stderr, "\nThe generated source code is in the '%s' file.\n", argv[2]);
 
-        //fprintf(stderr, "\n*******Semantic verification*******\n");
+        fprintf(stderr, "\n*******Semantic verification*******\n");
         checkUndeclared();
         setDeclaration(getAST());
-
+        fprintf(stderr, "\n");
         // fprintf(stderr, "Generated backward TAC:\n");
         // tacPrintBackward(tacGenerate(getAST()));
-        fprintf(stderr, "\nGenerated forward TAC:\n");
-        tacPrintForward(tacReverse(tacGenerate(getAST())));
 
         if(SemanticErrorFlag == 1)
         {
             fprintf(stderr, "Semantic error found!\n");
             //fprintf(stderr, "\n***********************************\n");
-            exit(4);
+            //exit(4);
         }
-        fprintf(stderr, "\nSemantic verification OK!\n");
+        //fprintf(stderr, "\nSemantic verification OK!\n");
         //fprintf(stderr, "\n***********************************\n");
+
+        fprintf(stderr, "\nGenerated forward TAC:\n");
+        tacPrintForward(tacReverse(tacGenerate(getAST())));
+
+        sendedTac = tacReverse(tacGenerate(getAST()));
+        fprintf(stderr, "\nGenerating assembly...\n");
+        generateASM(sendedTac, "asm.s");
+        fprintf(stderr, "The generated source code is in the 'asm.s' file \n");
 
         exit(0);
     }

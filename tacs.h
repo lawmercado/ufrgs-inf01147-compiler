@@ -49,6 +49,7 @@ typedef struct tac_struct
     HASH_NODE *res;
     HASH_NODE *op1;
     HASH_NODE *op2;
+    AST_NODE *node;
     struct tac_struct *prev;
     struct tac_struct *next;
 } TAC;
@@ -73,6 +74,7 @@ TAC *makeWhile(TAC *result0, TAC *result1);
 TAC* makePrint(AST_NODE* node, TAC* result0, TAC* result1);
 TAC *makeFuncDec(AST_NODE *node, TAC *result0, TAC *result1, TAC *result2);
 TAC *makeFuncCall(AST_NODE *node, TAC *result0, TAC *result1);
+
 
 
 #endif

@@ -438,6 +438,12 @@ void astGenerateSource(AST_NODE *node, FILE *file)
         case AST_FLOAT_DEF: fprintf(file, "float %s", node->symbol->text); break;
         case AST_CHAR_DEF: fprintf(file, "char %s", node->symbol->text); break;
         case AST_SYMBOL: fprintf(file, "%s", node->symbol->text); break;
+        case AST_STRING:
+        {
+			fprintf(file, "\"");
+			fprintf(file, "%s", node->symbol->text);
+			fprintf(file, "\"");
+		} break;
         default: fprintf(file, "OI"); break;
     }
 }

@@ -47,6 +47,7 @@ enum AST_NODE_TYPE {
     AST_DATATYPE_INT,
     AST_DATATYPE_FLOAT,
     AST_DATATYPE_BOOL,
+    AST_STRING
 };
 
 typedef struct ast_node

@@ -11,10 +11,9 @@
 #include "semantic.h"
 #include "y.tab.h"
 
-HASH_NODE* Table[HASH_SIZE];
-
 void astFind(int level, AST_NODE *node, char *text);
 AST_NODE* getAST();
+int tempFlag = 0;
 
 void hashInit (void)
 {
@@ -52,19 +51,32 @@ HASH_NODE* hashInsert(int type, char *text)
     }
     newnode = (HASH_NODE*) calloc(1, sizeof(HASH_NODE));
     newnode->type = type;
+    newnode->isLiteral = 0;
+    newnode->assemblyLabel = 0;
+
     if(type == 1)
     {
         newnode->datatype = DATATYPE_INT;
+        newnode->isLiteral = 1;
         //fprintf(stderr, "Definindo datatype int = %d\n", newnode->datatype);
     } else if (type == 2)
     {
         newnode->datatype = DATATYPE_FLOAT;
+        newnode->isLiteral = 1;
         //fprintf(stderr, "Definindo datatype float = %d\n", newnode->datatype);
     } else if (type == 3)
     {
         newnode->datatype = DATATYPE_CHAR;
+        newnode->isLiteral = 1;
         //fprintf(stderr, "Definindo datatype char = %d\n", newnode->datatype);
     }
+
+    if(tempFlag == 1)
+    {
+        newnode->datatype = DATATYPE_TEMP;
+        tempFlag = 0;
+    }
+
     newnode->text = calloc(strlen(text)+1, sizeof(char));
     strcpy(newnode->text, text);
     newnode->next = Table[address];
@@ -155,10 +167,11 @@ void hashCheckUndeclared(void)
 
 HASH_NODE *makeTemp()
 {
+    tempFlag = 1;
     static int serial = 0;
     static char name[100];
     sprintf(name, "__TEmpP%d", serial++);
-    return hashInsert(SYMBOL_SCALAR, name);
+    return hashInsert(SYMBOL_TEMP, name);
 }
 
 HASH_NODE *makeLabel()

@@ -4,6 +4,37 @@
 
 AST_NODE *getAST();
 int SemanticErrorFlag = 0;
+int init = 0;
+
+void listFuncDeclInsert(LIST_FUNC_DECL **listFuncDecl, AST_NODE *node)
+{
+	LIST_FUNC_DECL *newNode;
+
+	if (!(newNode = (LIST_FUNC_DECL*) calloc(1, sizeof(LIST_FUNC_DECL))))
+	{
+		fprintf(stderr, "Erro FUNC_DECL_LIST_CREATE: sem memória!\n");
+		exit(1);
+ 	}
+
+	newNode->ast_node = node;
+	newNode->next = 0;
+
+	if (*listFuncDecl == 0)
+	{
+	 	*listFuncDecl = newNode;
+	}
+	else
+	{
+	  	LIST_FUNC_DECL* temp = *listFuncDecl;
+
+	  	while (temp->next != 0)
+	  	{
+	   		temp = temp->next;
+	 	}
+
+	  	temp->next = newNode;
+	}
+}
 
 void setDeclaration(AST_NODE *root)
 {
@@ -493,6 +524,11 @@ void setDeclaration(AST_NODE *root)
 
 void checkUndeclared()
 {
+    if(!init)
+    {
+        listFuncDecl = 0;
+        init = 1;
+    }
     hashCheckUndeclared();
 }
 

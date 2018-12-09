@@ -1,18 +1,16 @@
-int a = 0;
-int xq5p;
+int x = 5;
+int xxq2p: 1 5;
 
-int ffdint c, int ccb{
-  return 2;
+int ffdint a, int lb{
+    x = a + l;
+    return x;
 }
 
 int main db {
 
-  a = ffd2, 5b;
-  a = a + 2;
-  xqap = 3;
-  a = xq2p;
+    x = ffd 1, 55b;
 
-  print "Incrementado algumas vezes fica ",a,"b", 2*2, xq2p;
+    print x;
 
-
+    return 1;
 }

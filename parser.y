@@ -165,7 +165,7 @@ print_parameter_list
 
 print_parameter
     : expression
-    | LIT_STRING { $$ = astCreate(AST_SYMBOL, $1, 0, 0, 0, 0); }
+    | LIT_STRING { $$ = astCreate(AST_STRING, $1, 0, 0, 0, 0); }
     ;
 
 integer

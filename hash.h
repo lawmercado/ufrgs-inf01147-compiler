@@ -20,19 +20,25 @@
 #define SYMBOL_VECTOR 7
 #define SYMBOL_FUNCTION 8
 #define SYMBOL_LABEL 9
+#define SYMBOL_TEMP 10
 
 #define DATATYPE_INT 9
 #define DATATYPE_CHAR 10
 #define DATATYPE_FLOAT 11
+#define DATATYPE_TEMP 12
 
 typedef struct hash_node
 {
     int type;
     int datatype;
+    int isLiteral;
+    int assemblyLabel;
     char *text;
     struct hash_node *next;
 
 } HASH_NODE;
+
+HASH_NODE* Table[HASH_SIZE];
 
 void hashInit (void);
 
