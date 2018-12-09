@@ -6,7 +6,7 @@
 void printTacInfo(char *type, TAC *tac);
 AST_NODE *findDecNode(char *text, AST_NODE* root);
 void getParams(AST_NODE *node, AST_NODE *root, FILE* fasm);
-void getPrintParams(AST_NODE *node, AST_NODE *root, int *count , FILE *fasm)
+void getPrintParams(AST_NODE *node, AST_NODE *root, int *count , FILE *fasm);
 void getDec(AST_NODE *node, FILE *fasm);
 void generateASM(TAC *tac, char *filename);
 void generateVarDec(AST_NODE *node, FILE* fasm);

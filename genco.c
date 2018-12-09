@@ -561,15 +561,15 @@ void getPrintParams(AST_NODE *node, AST_NODE *root, int *count , FILE *fasm)
 			{
 				AST_NODE *dec = findDecNode(pnode->son[0]->symbol->text, root);
 
-				if(dec->son[0]->type == AST_INT_TYPE)
+				if(dec->son[0]->type == AST_INT_DEF)
 				{
 					fprintf(fasm, "\t.string\t\"%%d\"\n");
                 }
-				else if(dec->son[0]->type == AST_FLOAT_TYPE)
+				else if(dec->son[0]->type == AST_FLOAT_DEF)
 				{
 					fprintf(fasm, "\t.string\t\"%%f\"\n");
 				}
-				else if(dec->son[0]->type == AST_CHAR_TYPE)
+				else if(dec->son[0]->type == AST_CHAR_DEF)
 				{
 					fprintf(fasm, "\t.string\t\"%%c\"\n");
 				}
@@ -589,7 +589,7 @@ void getPrintParams(AST_NODE *node, AST_NODE *root, int *count , FILE *fasm)
 
 	for (i=0; i<MAX_SONS; i++)
     {
-		getPrintParams(fasm, node->son[i], root, count);
+		getPrintParams(node->son[i], root, count, fasm);
 	}
 }
 
@@ -601,8 +601,7 @@ void generateASM(TAC *tac, char *filename)
 
     AST_NODE *root = getAST();
 
-    int vectorIndex = 0;
-    char *vectorPrint[MAX_VECTOR_PRINT_SIZE];
+    int count = 0;
 
     if(!(fasm = fopen(filename, "w")))
     {
