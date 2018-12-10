@@ -11,6 +11,7 @@ TAC *tacCreate(int type, HASH_NODE *res, HASH_NODE *op1, HASH_NODE *op2, AST_NOD
     newtac->res = res;
     newtac->op1 = op1;
     newtac->op2 = op2;
+    newtac->node = node;
     newtac->prev = 0;
     newtac->next = 0;
     return newtac;

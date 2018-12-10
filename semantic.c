@@ -89,7 +89,7 @@ void setDeclaration(AST_NODE *root)
                     {
                         if(son0->symbol)
                         {
-                            if(son0->symbol->type != TK_IDENTIFIER)
+                            if(son0->symbol->type != SYMBOL_TK_IDENTIFIER)
                             {
                                 fprintf(stderr, "Symbol %s redeclared.\n", son0->symbol->text);
                                 SemanticErrorFlag = 1;
@@ -123,7 +123,7 @@ void setDeclaration(AST_NODE *root)
                     {
                         if(son0->symbol)
                         {
-                            if(son0->symbol->type != TK_IDENTIFIER)
+                            if(son0->symbol->type != SYMBOL_TK_IDENTIFIER)
                             {
                                 fprintf(stderr, "Symbol %s redeclared.\n", son0->symbol->text);
                                 SemanticErrorFlag = 1;
@@ -243,7 +243,7 @@ void setDeclaration(AST_NODE *root)
                     {
                         if(son0->symbol)
                         {
-                            if(son0->symbol->type != TK_IDENTIFIER)
+                            if(son0->symbol->type != SYMBOL_TK_IDENTIFIER)
                             {
                                 fprintf(stderr, "Symbol %s redeclared.\n", son0->symbol->text);
                                 SemanticErrorFlag = 1;

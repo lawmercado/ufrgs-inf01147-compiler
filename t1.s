@@ -6,19 +6,9 @@
 	.size	d, 4
 d:
 	.long	2
-	.globl	a
-	.align 4
-	.type	a, @object
-	.size	a, 4
-a:
-	.long	2
-	.globl	c
-	.bss
-	.align 4
-	.type	c, @object
-	.size	c, 4
-c:
-	.zero	4
+	.section	.rodata
+.LC0:
+	.string	"%d"
 	.text
 	.globl	main
 	.type	main, @function
@@ -30,14 +20,16 @@ main:
 	.cfi_offset 6, -16
 	movq	%rsp, %rbp
 	.cfi_def_cfa_register 6
+	subq	$16, %rsp
 	movl	%edi, -4(%rbp)
 	movq	%rsi, -16(%rbp)
-	movl	a(%rip), %edx
 	movl	d(%rip), %eax
-	imull	%edx, %eax
-	movl	%eax, c(%rip)
+	movl	%eax, %esi
+	movl	$.LC0, %edi
 	movl	$0, %eax
-	popq	%rbp
+	call	printf
+	movl	$0, %eax
+	leave
 	.cfi_def_cfa 7, 8
 	ret
 	.cfi_endproc

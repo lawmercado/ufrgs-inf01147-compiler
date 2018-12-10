@@ -82,7 +82,7 @@ int main(int argc, char** argv)
             //exit(4);
         }
         //fprintf(stderr, "\nSemantic verification OK!\n");
-        //fprintf(stderr, "\n***********************************\n");
+        fprintf(stderr, "\n***********************************\n");
 
         fprintf(stderr, "\nGenerated forward TAC:\n");
         tacPrintForward(tacReverse(tacGenerate(getAST())));

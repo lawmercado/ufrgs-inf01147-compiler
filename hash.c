@@ -51,20 +51,21 @@ HASH_NODE* hashInsert(int type, char *text)
     }
     newnode = (HASH_NODE*) calloc(1, sizeof(HASH_NODE));
     newnode->type = type;
+
     newnode->isLiteral = 0;
     newnode->assemblyLabel = 0;
 
-    if(type == 1)
+    if(type == SYMBOL_LIT_INTEGER)
     {
         newnode->datatype = DATATYPE_INT;
         newnode->isLiteral = 1;
         //fprintf(stderr, "Definindo datatype int = %d\n", newnode->datatype);
-    } else if (type == 2)
+    } else if (type == SYMBOL_LIT_FLOAT)
     {
         newnode->datatype = DATATYPE_FLOAT;
         newnode->isLiteral = 1;
         //fprintf(stderr, "Definindo datatype float = %d\n", newnode->datatype);
-    } else if (type == 3)
+    } else if (type == SYMBOL_LIT_CHAR)
     {
         newnode->datatype = DATATYPE_CHAR;
         newnode->isLiteral = 1;
@@ -141,7 +142,7 @@ void hashCheckUndeclared(void)
             //fprintf(stderr, "[checkUndeclared] 2o for.\n");
             astFind(0, getAST(), node->text);
             //fprintf(stderr, "[checkUndeclared] Saiu astFind.\n");
-            if(node->type == SYMBOL_TK_IDENTIFIER)
+            if(node->type == TK_IDENTIFIER)
             {
                 //fprintf(stderr, "[checkUndeclared] If => Undeclared variable.\n");
                 fprintf(stderr, "Undeclared variable %s.\n", node->text);
@@ -154,7 +155,7 @@ void hashCheckUndeclared(void)
                 //fprintf(stderr, "ENTREI ELSE hashCheckUndeclared\n");
                 switch (node->type)
                 {
-                    case SYMBOL_LIT_CHAR: node->datatype = DATATYPE_CHAR; /*fprintf(stderr, "CASE SYMBOL_LIT_CHAR\n");*/ break;
+                    case SYMBOL_LIT_CHAR: node->datatype = DATATYPE_INT; /*fprintf(stderr, "CASE SYMBOL_LIT_CHAR\n");*/ break;
                     case SYMBOL_LIT_INTEGER: node->datatype = DATATYPE_INT; /*fprintf(stderr, "CASE SYMBOL_LIT_INT\n");*/ break;
                     case SYMBOL_LIT_FLOAT: node->datatype = DATATYPE_FLOAT; /*fprintf(stderr, "CASE SYMBOL_LIT_FLOAT\n");*/ break;
                 }

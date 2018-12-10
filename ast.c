@@ -459,9 +459,9 @@ void astFind(int level, AST_NODE *node, char *text)
 
     if(node->type == AST_VAR_DEC)
     {
-        if((strcmp(node->son[0]->symbol->text, text) == 0 && node->son[0]->symbol->type == SYMBOL_TK_IDENTIFIER))
+        if((strcmp(node->son[0]->symbol->text, text) == 0 && node->son[0]->symbol->type == TK_IDENTIFIER))
         {
-            hashSetType(text, TK_IDENTIFIER);
+            hashSetType(text, SYMBOL_TK_IDENTIFIER);
         }
     }
 
@@ -469,7 +469,7 @@ void astFind(int level, AST_NODE *node, char *text)
     {
         //fprintf(stderr, "[astFind] Entrou if AST_FUNC_DEC, AST_VEC_DEC.\n");
         //fprintf(stderr, "[astFind] Entrou hashSetType.\n");
-        hashSetType(node->son[0]->symbol->text, TK_IDENTIFIER);
+        hashSetType(node->son[0]->symbol->text, SYMBOL_TK_IDENTIFIER);
         //fprintf(stderr, "[astFind] Saiu hashSetType para fun_dec ou vec_dec.\n");
 
     }
@@ -480,13 +480,13 @@ void astFind(int level, AST_NODE *node, char *text)
         if(node->son[0]->type == AST_VEC)
         {
             //fprintf(stderr, "[astFind] Entrou IF AST_ARG_LIST \n");
-            hashSetType(node->son[0]->son[0]->symbol->text, TK_IDENTIFIER);
+            hashSetType(node->son[0]->son[0]->symbol->text, SYMBOL_TK_IDENTIFIER);
         }
         else
         {
             //fprintf(stderr, "[astFind] Entrou ELSE AST_ARG_LIST \n");
             //fprintf(stderr, "[astFind] FILHO DO AST_ARG_LIST %s\n", node->son[0]->symbol->text);
-            hashSetType(node->son[0]->symbol->text, TK_IDENTIFIER);
+            hashSetType(node->son[0]->symbol->text, SYMBOL_TK_IDENTIFIER);
         }
     }
     //fprintf(stderr, "[astFind] Saiu AST_ARG_LIST \n");

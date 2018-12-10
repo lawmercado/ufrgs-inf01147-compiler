@@ -10,7 +10,7 @@ int main db {
 
     x = ffd 1, 55b;
 
-    print x;
+    print "SDSA";    
 
     return 1;
 }
