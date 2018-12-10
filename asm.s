@@ -24,19 +24,20 @@ __TEmpP5:
 	.long	0
 __TEmpP6:
 	.long	0
-
 l:
 	.long	0
 a:
 	.long	0
-	.section	.rodata
-	movl	%esi, %a(%rip)
-	movl	%edi, %l(%rip)
+.LC0:
+	.string	"%d"
 	.globl	ff
 ff:
 	.cfi_startproc
 	pushq	%rbp
-	movq	%rsp, %rbp	movl	a(%rip), %edx
+	movq	%rsp, %rbp
+	movl	%edi, %a(%rip)
+	movl	%esi, %l(%rip)
+	movl	a(%rip), %edx
 	movl	l(%rip), %eax
 	addl	%edx, %eax
 	movl	%eax, __TEmpP4(%rip)
@@ -47,11 +48,13 @@ ff:
 	popq	%rbp
 	ret
 	.cfi_endproc
+
 	.globl	main
 main:
 	.cfi_startproc
 	pushq	%rbp
-	movq	%rsp, %rbp	movl	$1, %esi
+	movq	%rsp, %rbp
+	movl	$1, %esi
 	movl	$55, %edi
 	call	ff
 	movl	%eax, __TEmpP6(%rip)

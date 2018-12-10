@@ -287,7 +287,7 @@ void generatePrint(AST_NODE *node, TAC *tac, FILE *fasm)
                 movl	$0, %eax
                 call	printf*/
 
-    //fprintf(fasm, "\n");
+    fprintf(fasm, "\n");
 }
 
 void generateExpression(TAC *tac, FILE *fasm)
@@ -539,7 +539,7 @@ void getPrintParams(AST_NODE *node, AST_NODE *root, int *count , FILE *fasm)
 {
     int i = 0;
 
-    if(count != 0)
+    if(count == 0)
     {
         fprintf(fasm, "\t.section\t.rodata\n");
     }
@@ -667,7 +667,7 @@ void generateASM(TAC *tac, char *filename)
                     "%s:\n"
                         "\t.cfi_startproc\n"
                         "\tpushq	%%rbp\n"
-                        "\tmovq	%%rsp, %%rbp", initTac->res ? initTac->res->text : 0, initTac->res ? initTac->res->text : 0);
+                        "\tmovq	%%rsp, %%rbp\n", initTac->res ? initTac->res->text : 0, initTac->res ? initTac->res->text : 0);
                 }
             } break;
 

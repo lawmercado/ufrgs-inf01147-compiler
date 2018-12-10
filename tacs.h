@@ -54,7 +54,7 @@ typedef struct tac_struct
     struct tac_struct *next;
 } TAC;
 
-TAC *tacCreate(int type, HASH_NODE *res, HASH_NODE *op1, HASH_NODE *op2);
+TAC *tacCreate(int type, HASH_NODE *res, HASH_NODE *op1, HASH_NODE *op2, AST_NODE *node);
 void tacPrintSingle(TAC *tac);
 TAC *tacReverse(TAC *last);
 void tacPrintBackward(TAC *tac);
@@ -67,10 +67,10 @@ TAC *tacJoin(TAC *l1, TAC *l2);
 
 //CODE GENERATION PROTOTYPES
 
-TAC *makeBinOp(int type, TAC *result0, TAC *result1);
-TAC *makeIf(TAC *result0, TAC *result1);
-TAC *makeIfElse(TAC *result0, TAC *result1, TAC *result2);
-TAC *makeWhile(TAC *result0, TAC *result1);
+TAC *makeBinOp(int type, TAC *result0, TAC *result1, AST_NODE *node);
+TAC *makeIf(TAC *result0, TAC *result1, AST_NODE *node);
+TAC *makeIfElse(TAC *result0, TAC *result1, TAC *result2, AST_NODE *node);
+TAC *makeWhile(TAC *result0, TAC *result1, AST_NODE *node);
 TAC* makePrint(AST_NODE* node, TAC* result0, TAC* result1);
 TAC *makeFuncDec(AST_NODE *node, TAC *result0, TAC *result1, TAC *result2);
 TAC *makeFuncCall(AST_NODE *node, TAC *result0, TAC *result1);
