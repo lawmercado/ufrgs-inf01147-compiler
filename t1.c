@@ -1,13 +1,20 @@
 #include <stdio.h>
 
 //char *a = "primero";
-int d = 2;
+// int a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p = 0;
+// int r = 4;
+// int s = 2;
 //char *b = "dsa";
 //char *s = "string";
 //char *b = "oi";
 //char *c = "string";
 
-int main(int argc, char **argv)
+int x = 50;
+int b = 25;
+int main()
 {
-    printf("%d", d);
+    if(x > b)
+        x = 10;
+
+    printf("%d\n", x);
 }

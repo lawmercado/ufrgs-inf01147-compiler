@@ -1,16 +1,9 @@
 int x = 5;
-int xxq2p: 1 5;
-
-int ffdint a, int lb{
-    x = a + l;
-    return x;
-}
+int a = 4;
+int c = 2;
+int xxq3p: 0 1 5;
 
 int main db {
-
-    x = ffd 1, 55b;
-
-    print "SDSA";    
-
-    return 1;
+    x = 4 / 3;
+    print x;
 }

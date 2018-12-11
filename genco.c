@@ -23,43 +23,39 @@ void printTacInfo(char *type, TAC *tac)
 
 AST_NODE* findDecNode(char *text, AST_NODE *root)
 {
-    fprintf(stderr, "Entrou findDec\n");
+    //fprintf(stderr, "Entrou findDec\n");
 
 	AST_NODE *node = root;
 
 	while(node->son[0])
 	{
-        fprintf(stderr, "Entrou while\n");
-
+        //fprintf(stderr, "Entrou while\n");
 		if(node->son[0]->type == AST_VEC_DEC || node->son[0]->type == AST_VAR_DEC)
 		{
-            fprintf(stderr, "Entrou if 1.1\n");
-
+            //fprintf(stderr, "Entrou if 1.1\n");
 			if(strcmp(node->son[0]->son[0]->symbol->text, text) == 0)
             {
-                fprintf(stderr, "Entrou if 1.2\n");
-
+                //fprintf(stderr, "Entrou if 1.2\n");
 				return node->son[0];
             }
         }
 
 		if(node->son[1])
 		{
-            fprintf(stderr, "Entrou if 2.1\n");
-
+            //fprintf(stderr, "Entrou if 2.1\n");
 			if(node->son[1]->type == AST_VEC_DEC || node->son[1]->type == AST_VAR_DEC)
 			{
-                fprintf(stderr, "Entrou if 2.2\n");
+                //fprintf(stderr, "Entrou if 2.2\n");
 				if(strcmp(node->son[1]->son[0]->symbol->text, text) == 0)
                 {
-                    fprintf(stderr, "Entrou if 2.3\n");
+                    //fprintf(stderr, "Entrou if 2.3\n");
 					return node->son[1];
                 }
             }
 		}
         node = node->son[0];
 	}
-    fprintf(stderr, "Vai sair findDecNode\n");
+    //fprintf(stderr, "Vai sair findDecNode\n");
 	return NULL;
 }
 
@@ -85,6 +81,22 @@ void generateVarDec(AST_NODE *node, FILE* fasm)
         fprintf(fasm, "\t.size\t%s, 4\n", node->son[0]->symbol->text);
     }
     fprintf(fasm, "%s:\n", node->son[0]->symbol->text);
+
+	if(node->son[0]->type == AST_CHAR_DEF)
+		fprintf(fasm, "\t.byte\t%d\n", node->son[0]->symbol->text[0]);
+	else
+	{
+		if(strcmp(node->son[1]->symbol->text, "0") == 0 ||
+		strcmp(node->son[1]->symbol->text, "0.0") == 0)
+			fprintf(fasm, "\t.zero\t4\n");
+		else
+		{
+			if(node->son[0]->type == AST_INT_DEF)
+				fprintf(fasm, "\t.long\t%s\n", node->son[1]->symbol->text);
+			else
+				fprintf(fasm, "\t.long\t%s\n", "10231568566");
+		}
+	}
 }
 
 void generateVecDec(AST_NODE *node, FILE* fasm)
@@ -240,25 +252,25 @@ void getDec(AST_NODE *node, FILE *fasm)
 
 void generatePrint(AST_NODE *node, TAC *tac, FILE *fasm)
 {
-    fprintf(stderr, "Entrou generatePrint\n");
-    // if(tac->node->son[0]->type == AST_STRING)
-	// {
-    //     fprintf(stderr, "[generatePrint] if AST_STRING\n");
-	// 	fprintf(fasm, "\tleaq\t.LC%d(%%rip), %%rdi\n"
-    //                   "\tcall\tputs\n", tac->res->assemblyLabel);
-	// }
-	// else
-	// {
+    //fprintf(stderr, "Entrou generatePrint\n");
+    if(tac->node->son[0]->type == AST_STRING)
+	{
+        //fprintf(stderr, "[generatePrint] if AST_STRING\n");
+		fprintf(fasm, "\tleaq\t.LC%d(%%rip), %%rdi\n"
+                      "\tcall\tputs\n", tac->res->assemblyLabel);
+	}
+	else
+	{
     //     fprintf(stderr, "[generatePrint] else\n");
-        fprintf(stderr, "%s\n", tac->res->text);
+        //fprintf(stderr, "%s\n", tac->res->text);
 
 		AST_NODE *dec = findDecNode(tac->res->text, node);
-        if(dec == NULL)
-        {
-            fprintf(stderr, "dec eh NULL!!!\n");
-        }
-        fprintf(stderr, "Saiu findDecNode\n");
-        fprintf(stderr, "[generatePrint] %d\n", dec->son[0]->type);
+        // if(dec == NULL)
+        // {
+        //     fprintf(stderr, "dec eh NULL!!!\n");
+        // }
+        // fprintf(stderr, "Saiu findDecNode\n");
+        // fprintf(stderr, "[generatePrint] %d\n", dec->son[0]->type);
 		if(dec->son[0]->type == AST_INT_DEF)
 		{
             /*INT =>  movl	b(%rip), %eax
@@ -281,19 +293,19 @@ void generatePrint(AST_NODE *node, TAC *tac, FILE *fasm)
                      movl	$.LC1, %edi
                      movl	$0, %eax
                      call	printf*/
-            fprintf(fasm, "\tmovzbl\t%s(%%rip), %%eax\n", tac->res->text ? tac->res->text : "-" );
-			fprintf(fasm, "\tmovsbl\t%%al, %%eax\n");
-			fprintf(fasm, "\tmovl\t%%eax, %%esi\n");
-
-			fprintf(fasm, "\tleaq\t.LC%d(%%rip), %%rdi\n", tac->res->assemblyLabel ? tac->res->assemblyLabel : 0);
-			fprintf(fasm, "\tmovl\t$0, %%eax\n");
-			fprintf(fasm, "\tcall\tprintf\n");
+            // fprintf(fasm, "\tmovzbl\t%s(%%rip), %%eax\n", tac->res->text ? tac->res->text : "-" );
+			// fprintf(fasm, "\tmovsbl\t%%al, %%eax\n");
+			// fprintf(fasm, "\tmovl\t%%eax, %%esi\n");
+			//
+			// fprintf(fasm, "\tleaq\t.LC%d(%%rip), %%rdi\n", tac->res->assemblyLabel ? tac->res->assemblyLabel : 0);
+			// fprintf(fasm, "\tmovl\t$0, %%eax\n");
+			// fprintf(fasm, "\tcall\tprintf\n");
             //fprintf(stderr, "[generatePrint] else if AST_CHAR_DEF\n");
-			// fprintf(fasm, "\tmovq\t%s(%%rip), %%rax\n"
-			// "\tmovq\t%%rax, %%rsi\n"
-			// "\tmovl\t$.LC%d, %%edi\n"
-			// "\tmovl\t$0, %%eax\n"
-			// "\tcall\tprintf", tac->res->text, tac->res->assemblyLabel);
+			fprintf(fasm, "\tmovq\t%s(%%rip), %%rax\n"
+			"\tmovq\t%%rax, %%rsi\n"
+			"\tmovl\t$.LC%d, %%edi\n"
+			"\tmovl\t$0, %%eax\n"
+			"\tcall\tprintf", tac->res->text, tac->res->assemblyLabel);
 		}
 		else if(dec->son[0]->type == AST_FLOAT_DEF)
 		{
@@ -315,8 +327,8 @@ void generatePrint(AST_NODE *node, TAC *tac, FILE *fasm)
 			"\tmovl\t$1, %%eax\n"
 			"\tcall\tprintf", tac->res->text, tac->res->assemblyLabel);
 		}
-	//}
-    fprintf(stderr, "[generatePrint] saindo\n");
+	}
+    //fprintf(stderr, "[generatePrint] saindo\n");
     fprintf(fasm, "\n");
 }
 
@@ -328,41 +340,108 @@ void generateExpression(TAC *tac, FILE *fasm)
 	{
         case TAC_ADD:
             strcpy(operand, "addl");
+			if(!tac->op1->isLiteral)
+		    {
+		        fprintf(fasm, "\tmovl\t%s(%%rip), %%edx\n", tac->op1->text);
+		    }
+		    else
+		    {
+		        fprintf(fasm, "\tmovl\t$%s, %%edx\n", tac->op1->text);
+		    }
+
+		    if(!tac->op2->isLiteral)
+		    {
+		        fprintf(fasm, "\tmovl\t%s(%%rip), %%eax\n", tac->op2->text);
+		    }
+		    else
+		    {
+		        fprintf(fasm, "\tmovl\t$%s, %%eax\n", tac->op2->text);
+		    }
+
+		    fprintf(fasm, "\t%s\t%%edx, %%eax\n", operand);
+		    fprintf(fasm, "\tmovl\t%%eax, %s(%%rip)\n", tac->res->text);
             break;
         case TAC_SUB:
             strcpy(operand, "subl");
+			if(!tac->op1->isLiteral)
+		    {
+		        fprintf(fasm, "\tmovl\t%s(%%rip), %%edx\n", tac->op1->text);
+		    }
+		    else
+		    {
+		        fprintf(fasm, "\tmovl\t$%s, %%edx\n", tac->op1->text);
+		    }
+
+		    if(!tac->op2->isLiteral)
+		    {
+		        fprintf(fasm, "\tmovl\t%s(%%rip), %%eax\n", tac->op2->text);
+		    }
+		    else
+		    {
+		        fprintf(fasm, "\tmovl\t$%s, %%eax\n", tac->op2->text);
+		    }
+
+		    fprintf(fasm, "\t%s\t%%edx, %%eax\n", operand);
+		    fprintf(fasm, "\tmovl\t%%eax, %s(%%rip)\n", tac->res->text);
             break;
         case TAC_MUL:
             strcpy(operand, "imull");
+			if(!tac->op1->isLiteral)
+		    {
+		        fprintf(fasm, "\tmovl\t%s(%%rip), %%edx\n", tac->op1->text);
+		    }
+		    else
+		    {
+		        fprintf(fasm, "\tmovl\t$%s, %%edx\n", tac->op1->text);
+		    }
+
+		    if(!tac->op2->isLiteral)
+		    {
+		        fprintf(fasm, "\tmovl\t%s(%%rip), %%eax\n", tac->op2->text);
+		    }
+		    else
+		    {
+		        fprintf(fasm, "\tmovl\t$%s, %%eax\n", tac->op2->text);
+		    }
+
+		    fprintf(fasm, "\t%s\t%%edx, %%eax\n", operand);
+		    fprintf(fasm, "\tmovl\t%%eax, %s(%%rip)\n", tac->res->text);
             break;
 		case TAC_DIV:
             strcpy(operand, "idivl");
+			if(!tac->op1->isLiteral)
+		    {
+		        fprintf(fasm, "\tmovl\t%s(%%rip), %%eax\n", tac->op1->text);
+		    }
+		    else
+		    {
+		        fprintf(fasm, "\tmovl\t$%s, %%eax\n", tac->op1->text);
+		    }
+
+		    if(!tac->op2->isLiteral)
+		    {
+		        fprintf(fasm, "\tmovl\t%s(%%rip), %%ecx\n", tac->op2->text);
+		    }
+		    else
+		    {
+		        fprintf(fasm, "\tmovl\t$%s, %%ecx\n", tac->op2->text);
+		    }
+
+			fprintf(fasm, "\tcltd\n");
+		    fprintf(fasm, "\t%s\t%%ecx\n", operand);
+		    fprintf(fasm, "\tmovl\t%%eax, %s(%%rip)\n", tac->res->text);
+			/*movl	d(%rip), %eax
+			  movl	c(%rip), %ecx
+			  cltd
+			  idivl	%ecx
+			  movl	%eax, a(%rip)*/
             break;
         default:
             return;
             break;
     }
 
-    if(!tac->op1->isLiteral)
-    {
-        fprintf(fasm, "\tmovl\t%s(%%rip), %%edx\n", tac->op1->text);
-    }
-    else
-    {
-        fprintf(fasm, "\tmovl\t$%s, %%edx\n", tac->op1->text);
-    }
 
-    if(!tac->op2->isLiteral)
-    {
-        fprintf(fasm, "\tmovl\t%s(%%rip), %%eax\n", tac->op2->text);
-    }
-    else
-    {
-        fprintf(fasm, "\tmovl\t$%s, %%eax\n", tac->op2->text);
-    }
-
-    fprintf(fasm, "\t%s\t%%edx, %%eax\n", operand);
-    fprintf(fasm, "\tmovl\t%%eax, %s(%%rip)\n", tac->res->text);
 }
 
 void generateBool(TAC *tac, FILE *fasm)
@@ -767,3 +846,5 @@ void generateASM(TAC *initTac, char *filename)
         }
     }
 }
+
+//VECREAD,VECWRITW,ADD,SUB,MUL,ATTRIB,IF,IFELSE,WHILE,GREATER,GEQUAL,LEQUAL,EQUAL,FUNCCALL,FUNCDEC,PRINT,DIV => OK

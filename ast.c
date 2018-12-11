@@ -68,6 +68,7 @@ void astPrint(AST_NODE *node, int level)
         case AST_BLK: fprintf(stderr, "AST_BLK, "); break;
         case AST_DB: fprintf(stderr, "AST_DB, "); break;
         case AST_ARG_LIST: fprintf(stderr, "AST_ARG_LIST, "); break;
+        case AST_STRING: fprintf(stderr, "AST_STRING, "); break;
         default: fprintf(stderr, "AST_UNKNOWN, "); break;
     }
 

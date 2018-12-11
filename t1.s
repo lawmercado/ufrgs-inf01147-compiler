@@ -1,14 +1,21 @@
 	.file	"t1.c"
-	.globl	d
+	.globl	x
 	.data
 	.align 4
-	.type	d, @object
-	.size	d, 4
-d:
-	.long	2
+	.type	x, @object
+	.size	x, 4
+x:
+	.long	26
+
+	.globl	b
+	.align 4
+	.type	b, @object
+	.size	b, 4
+b:
+	.long	26
 	.section	.rodata
 .LC0:
-	.string	"%d"
+	.string	"%d\n"
 	.text
 	.globl	main
 	.type	main, @function
@@ -20,16 +27,25 @@ main:
 	.cfi_offset 6, -16
 	movq	%rsp, %rbp
 	.cfi_def_cfa_register 6
-	subq	$16, %rsp
-	movl	%edi, -4(%rbp)
-	movq	%rsi, -16(%rbp)
-	movl	d(%rip), %eax
+
+	movl	x(%rip), %edx
+	movl	b(%rip), %eax
+	cmpl	%eax, %edx
+	jle	.L2
+	movl	$10, x(%rip)
+.L2:
+
+
+
+
+
+	movl	x(%rip), %eax
 	movl	%eax, %esi
 	movl	$.LC0, %edi
 	movl	$0, %eax
 	call	printf
 	movl	$0, %eax
-	leave
+	popq	%rbp
 	.cfi_def_cfa 7, 8
 	ret
 	.cfi_endproc
